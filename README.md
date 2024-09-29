@@ -1,29 +1,24 @@
 # CBox-FE
-Описание проекта:
-CBox — это облачный сервис для хранения, редактирования и совместного использования текстовых документов. Цель проекта — предоставить пользователям безопасную и удобную платформу для работы с текстовыми файлами, доступную из любой точки мира.
-Сервис CBox позволяет пользователям загружать, редактировать и делиться документами с другими людьми в реальном времени, что делает его полезным как для индивидуального использования, так и для командной работы. Преимущество проекта заключается в простом и интуитивно понятном интерфейсе, а также в обеспечении надежной защиты данных.
-Пользователи могут работать с документами на разных устройствах, обеспечивая гибкость и удобство в рабочих процессах. CBox ориентирован как на корпоративных клиентов, так и на частных пользователей, которым необходимо эффективно управлять своими документами в облаке.
-Основные функции:
-•	Регистрация и авторизация пользователей.
-•	Загрузка текстовых документов в облако.
-•	Редактирование документов в реальном времени.
-•	Совместное редактирование с другими пользователями.
-•	Управление доступом к документам.
-•	Удаление документов.
-Основные пользователи:
-Гость — может зарегистрироваться для получения полного доступа.
-Зарегистрированный пользователь — имеет доступ ко всем функциям системы, включая загрузку, редактирование и совместное использование документов.
-Администратор — управляет пользователями системы, отслеживает ее работу и обеспечивает безопасность.
+Project Description: 
+CBox is a cloud-based service for storing, editing and sharing text documents. The goal of the project is to provide users with a secure and convenient platform for working with text files, accessible from anywhere in the world. The CBox service allows users to upload, edit and share documents with other users in real time, making it useful for both individual use and teamwork. The project has the advantage of a simple and intuitive interface, as well as robust data protection. Users can work with documents on different devices, providing flexibility and convenient workflows. CBox is aimed at both corporate clients and private users who need to efficiently manage their documents in the cloud. 
+Key features: 
+- User registration and authorization. 
+- Uploading text documents to the cloud. 
+- Real-time editing of documents. 
+- Collaborative editing with other users. 
+- Managing access to documents. 
+- Deleting documents. 
+Basic users: 
+Guest - can register for full access. Registered user - has access to all system functions, including uploading, editing and sharing documents. Administrator - manages users of the system, monitors its operation and provides security.
+To implement the CBox project we use:
+Figma: for design development.
+React.js: used to create a dynamic and responsive user interface.
+HTML5 and CSS3: the foundation of web page structure and style.
+JavaScript (ES6+): for writing frontend logic and working with APIs.
+Bootstrap - CSS framework for responsive and adaptive design.
 
-Для реализации проекта CBox используются следующие технологии:
-Figma: для разработки дизайна.
-React.js: используется для создания динамичного и отзывчивого пользовательского интерфейса.
-HTML5 и CSS3: основа структуры и стиля веб-страниц.
-JavaScript (ES6+): для написания логики фронтенда и работы с API.
-Bootstrap – CSS-фреймворк для быстрого и адаптивного дизайна.
-
-Ссылка на прототипы:
+Link to prototypes:
 https://www.figma.com/design/jBZrQqgMDAXNQLc1Mm6iGX/Untitled?node-id=201-2&node-type=canvas&t=BTXio4p6nOBY1ySu-0
 
-Ссылку на API сервер:
+API server link:
 https://github.com/VG-software-foundations/CBox-BE
