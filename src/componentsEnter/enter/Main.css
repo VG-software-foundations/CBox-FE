@@ -1,0 +1,112 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.back {
+    
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    padding: 4.8vh;
+    height: auto;
+}
+
+.containerMain {
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 50vw; 
+    max-width: 414px; 
+    height: 80vh;
+    max-height: 624px;
+    min-height: 410px;
+    
+    overflow: hidden;
+}
+
+
+.login-box {
+    padding: 7vh 2.2vw 0 2.2vw;
+    width: 48vw;
+    height: 88vh;
+    min-height: 380px;
+}
+
+.choice {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5vh;
+    border-bottom: 2px solid #9C6035;
+    padding-bottom: 1vh;
+}
+
+.choice h2 {
+    cursor: pointer;
+    font-size: clamp(1.5rem, 4vw, 30px);
+    color: #9C6035;
+}
+
+.choice .active {
+    font-weight: 900;
+}
+.choice .passive {
+    font-weight: 200;
+}
+.input-group {
+    margin-bottom: 3vh;
+}
+
+.input-group label {
+    padding: 5px;
+    display: block;
+    font-size: clamp(12px, 2vw, 15px);
+    color: #9C6035;
+    margin-bottom: 5px;
+}
+.inPut {
+padding-top: 3vh;
+}
+.input-group input {
+    width: 100%;
+    padding: 1vh;
+    border: 1px solid #9C6035;
+    border-radius: 20px;
+}
+
+.login-btn {
+    width: 100%;
+    padding: 1vh;
+    background-color: #8B4513;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: clamp(12px, 2vw, 18px);
+}
+
+.login-btn:hover {
+    background-color: #A0522D;
+}
+
+.social-login {
+    padding-top: 4vh;
+    padding-bottom: 4vh;
+    margin-top: 2vw;
+    text-align: center;
+}
+
+.social-icons {
+    justify-content: center;
+    display: flex;
+    column-gap: 3vw;
+}
+
+.social-icons img {
+    width: 3vw;
+    height: 3vw;
+}
