@@ -1,5 +1,5 @@
 import { convertFromHTML, convertToHTML } from "draft-convert";
-import { CUSTOM_STYLE_MAP, BlockType, EntityType, InlineStyle } from "./config";
+import { CUSTOM_STYLE_MAP, BlockType, EntityType, InlineStyle, AlignmentType } from "./config";
 
 export const stateToHTML = convertToHTML({
   styleToHTML: (style) => {
@@ -18,18 +18,26 @@ export const stateToHTML = convertToHTML({
         return null;
     }
   },
+
   blockToHTML: (block) => {
     switch (block.type) {
       case BlockType.orderList:
-        return { element: <li />, nest: <ol /> };
+        return { element: <ol />, nest: <li /> };
       case BlockType.list:
-        return { element: <li />, nest: <ul /> };
+        return { element: <ul />, nest: <li /> };
+      case BlockType.alignmentLeft:
+        return <div style={{ textAlign: "left" }} />;
+      case BlockType.alignmentCenter:
+        return <div style={{ textAlign: "center" }} />;
+      case BlockType.alignmentRight:
+        return <div style={{ textAlign: "right" }} />;
       case BlockType.default:
         return <p />;
       default:
         return null;
     }
   },
+
   entityToHTML: (entity, originalText) => {
     if (entity.type === EntityType.link) {
       return <a href={entity.data.url}>{originalText}</a>;
@@ -52,13 +60,22 @@ export const HTMLtoState = convertFromHTML({
     if (nodeName === "span" && node.style.textDecoration === "line-through") {
       return currentStyle.add(InlineStyle.STRIKETHROUGH);
     }
-      if (nodeName === "span" && node.style.color) {
-        return currentStyle.add('TEXT_COLOR'); 
-      }
-    
+    if (nodeName === "span" && node.style.color) {
+      return currentStyle.add('TEXT_COLOR'); 
+    }
     return currentStyle;
   },
+
   htmlToBlock(nodeName, node, last) {
+    if (node.style && node.style.textAlign === 'left') {
+      return BlockType.alignmentLeft;
+    }
+    if (node.style && node.style.textAlign === 'center') {
+      return BlockType.alignmentCenter;
+    }
+    if (node.style && node.style.textAlign === 'right') {
+      return BlockType.alignmentRight;
+    }
     switch (nodeName) {
       case "li":
         return last === "ol" ? BlockType.orderList : BlockType.list;
@@ -69,6 +86,7 @@ export const HTMLtoState = convertFromHTML({
         return null;
     }
   },
+  
   htmlToEntity: (nodeName, node, createEntity) => {
     if (nodeName === "a" && node.href) {
       return createEntity(EntityType.link, "MUTABLE", { url: node.href });

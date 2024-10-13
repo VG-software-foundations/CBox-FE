@@ -9,6 +9,9 @@ export const EntityType = {
 export const BlockType = {
   list: "unordered-list-item",
   orderList: "ordered-list-item",
+  alignmentLeft: "alignment-left",
+  alignmentCenter: "alignment-center",
+  alignmentRight: "alignment-right",
   default: "unstyled",
 };
 
@@ -20,24 +23,22 @@ export const InlineStyle = {
   TEXT_COLOR: 'TEXT_COLOR',
 };
 
-export const AlignmentType ={
-  LEFT: "LEFT",
-  RIGHT: "RIGHT",
-  CENTER: "CENTER",
-  JUSTIFY: "JUSTIFY",
-}
-
-export const BLOCK_LABELS = {
-  [BlockType.list]: "Маркированный список",
-  [BlockType.orderList]: "Нумерованный список",
-  [BlockType.default]: "Обычный текст",
-};
-
-
 
 const CUSTOM_BLOCK_RENDER_MAP = Immutable.Map({
   [BlockType.cite]: {
     element: "cite",
+  },
+  [BlockType.alignmentLeft]: {
+    element: "div",
+    wrapper: <div style={{ textAlign: "left" }} />,
+  },
+  [BlockType.alignmentCenter]: {
+    element: "div",
+    wrapper: <div style={{ textAlign: "center" }} />,
+  },
+  [BlockType.alignmentRight]: {
+    element: "div",
+    wrapper: <div style={{ textAlign: "right" }} />,
   },
 });
 

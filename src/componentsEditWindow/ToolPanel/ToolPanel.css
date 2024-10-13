@@ -11,42 +11,74 @@
     justify-content: space-between;
     align-items: center;
     width: 100%; 
-    margin-bottom: 10px;
 }
 
 .tool-panel__title {
     display: flex;
-    font-size: 18px;
-    margin: 0;
-    justify-content: center;
     align-items: center;
-    
+   
 }
-.title-logo{
-    width: 44px;
-    height: 32px;
+.title-logo {
+    height: 30px;
+    margin-right: 10px;
     position: absolute;
     left: 47%;
-    transform: translateX(-47);
-}
-.name-title{
-    font-size: 150;
-    color: #D5A681;
+    transform: translateX(-47%);
+  }
+  
+.name-title {
+    font-size: 24px;
     font-weight: bold;
+    color: #D5A681;
     position: absolute;
-    left: 50%;
+    left: 51%;
+    transform: translateX(-51%);
 }
 
 .tool-panel__icons {
     display: flex;
+    align-items: center;
 }
+
+.settings_of_access {
+    background-color: #D5A681;
+    border: none;
+    border-radius: 20px;
+    padding: 5px 15px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .settings_of_access:hover {
+    background-color: #bf8c65;
+  }
+  
+  .on_button_settings {
+    display: flex;
+    align-items: center;
+  }
+  
+  .on_button_settings img {
+    height: 30px;
+    margin-right: 8px;
+  }
+  
+  .settings {
+    font-size: 14px;
+    color: white;
+  }
 
 .tool-panel__icon-button {
     background: none;
     border: none;
-    font-size: 24px; 
+    margin-left: 15px;
     cursor: pointer;
 }
+.tool-panel__icon-button img {
+    height: 35px;
+  }
 
 .tool-panel__first-row,
 .tool-panel__second-row {
@@ -80,7 +112,11 @@
     background-color: #d5d5d5;
     border-color: rgb(161, 25, 25);
 }
-
+.family{
+    color: #9C6035;
+    font-size: 20px;
+    font-weight: 500;
+}
 .style-icon {
     width: 20px;
     height: 20px;
@@ -102,7 +138,17 @@
     justify-content: center; 
     padding: 10px; 
 }
-
+.alignment-left {
+    text-align: left;
+  }
+  
+  .alignment-center {
+    text-align: center;
+  }
+  
+  .alignment-right {
+    text-align: right;
+  }
 .dropdown {
     position: relative;
     display: inline-block;

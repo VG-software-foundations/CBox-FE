@@ -5,8 +5,10 @@ import classNames from "classnames";
 import { AlignmentType, BlockType, InlineStyle } from "../TextEditor/config";
 import "./ToolPanel.css";
 import logo from "./../images/logo.png"
+import profil from "./../images/profil.png"
+import planet from "./../images/mdi_planet.png"
 
-import { FaBold, FaLink, FaListOl, FaItalic, FaUnderline, FaStrikethrough, FaAlignLeft, FaAlignCenter, FaAlignRight, FaListUl, FaUndo, FaRedo, FaPalette } from 'react-icons/fa';
+import { FaPrint, FaBold, FaLink, FaListOl, FaItalic, FaUnderline, FaStrikethrough, FaAlignLeft, FaAlignCenter, FaAlignRight, FaListUl, FaUndo, FaRedo, FaPalette } from 'react-icons/fa';
 
 const toolbarOptions = {
     fontFamily: {
@@ -44,7 +46,7 @@ const ToolPanel = () => {
         hasInlineStyle,
         undo,
         redo,
-        setTextColor,
+        //setTextColor,
     } = useEditorApi();
 
     const [selectedColor, setSelectedColor] = useState("black"); 
@@ -53,21 +55,29 @@ const ToolPanel = () => {
         setSelectedColor(color);
         //setTextColor(color);
     };
-    const handleAlignment = (alignment) => {
-      toggleBlockType(alignment);
-  };
 
+    const handleAlignmentChange = (alignmentType) => {
+        toggleBlockType(alignmentType);
+      };
     return (
         <div className="tool-panel">
             <header className="tool-panel__header">
-                <div className="tool-panel__title"><img src={logo} className="title-logo">
-                </img> <div className="name-title">CBox</div></div>
+                <div className="tool-panel__title">
+                    <img src={logo} className="title-logo"></img> 
+                    <div className="name-title">CBox</div>
+                </div>
                 <div className="tool-panel__icons">
-                    <button className="tool-panel__icon-button">⚙️</button>
+                    <button className="settings_of_access">
+                     <div className="on_button_settings">
+                        <img src={planet}></img><p className="settings">Настройки доступа</p>
+                     </div>
+                    </button>
+                    <button className="tool-panel__icon-button">
+                    <img src={profil}></img>
+                    </button>
                 </div>
             </header>
-            <div className="tool-panel__first-row">
-                
+        <div className="tool-panel__first-row">
                 <button
                     className={classNames(
                         "tool-panel__item",
@@ -76,10 +86,10 @@ const ToolPanel = () => {
                     onMouseDown={(e) => {
                         e.preventDefault();
                         toggleInlineStyle(InlineStyle.BOLD);
-                    }}
-                >
+                    }}>
                     <FaBold color="#9C6035" size={20}/>
                 </button>
+
                 <button
                     className={classNames(
                         "tool-panel__item",
@@ -88,10 +98,10 @@ const ToolPanel = () => {
                     onMouseDown={(e) => {
                         e.preventDefault();
                         toggleInlineStyle(InlineStyle.ITALIC);
-                    }}
-                >
+                    }}>
                     <FaItalic color="#9C6035" size={20}/>
                 </button>
+
                 <button
                     className={classNames(
                         "tool-panel__item",
@@ -100,47 +110,71 @@ const ToolPanel = () => {
                     onMouseDown={(e) => {
                         e.preventDefault();
                         toggleInlineStyle(InlineStyle.UNDERLINE);
-                    }}
-                >
+                    }}>
                     <FaUnderline color="#9C6035" size={20}/>
                 </button>
+
                 <button
                     className={classNames(
                         "tool-panel__item",
                         hasInlineStyle(InlineStyle.STRIKETHROUGH) && "tool-panel__item_active"
                     )}
-
-onMouseDown={(e) => {
+                    onMouseDown={(e) => {
                         e.preventDefault();
                         toggleInlineStyle(InlineStyle.STRIKETHROUGH);
-                    }}
-                >
+                    }}>
                     <FaStrikethrough color="#9C6035" size={20}/>
                 </button>
 
-                <div className="toolbar__alignment">
-                    <button className="tool-panel__item" onClick={() => handleAlignment(AlignmentType.LEFT)}>
+            <div className="toolbar__alignment">
+                <button 
+                    className={classNames(
+                        "tool-panel__item",
+                         currentBlockType === BlockType.alignmentLeft && "tool-panel__item_active"
+                    )}
+                    onMouseDown={(e) => {
+                        e.preventDefault();
+                        handleAlignmentChange(BlockType.alignmentLeft);
+                    }}>
                         <FaAlignLeft color="#9C6035" size={20}/>
                     </button>
-                    <button className="tool-panel__item" onClick={() => handleAlignment(AlignmentType.CENTER)}>
-                        <FaAlignCenter color="#9C6035" size={20}/>
-                    </button>
-                    <button className="tool-panel__item" onClick={() => handleAlignment(AlignmentType.RIGHT)}>
-                        <FaAlignRight color="#9C6035" size={20}/>
-                    </button>
-                </div>
 
-                <div className="toolbar__history">
+                <button 
+                    className={classNames(
+                        "tool-panel__item",
+                        currentBlockType === BlockType.alignmentCenter && "tool-panel__item_active"
+                    )}
+                    onMouseDown={(e) => {
+                        e.preventDefault();
+                        handleAlignmentChange(BlockType.alignmentCenter);
+                    }}>
+                        <FaAlignCenter color="#9C6035" size={20}/>
+                </button>
+
+                <button 
+                className={classNames(
+                    "tool-panel__item",
+                    currentBlockType === BlockType.alignmentRight && "tool-panel__item_active"
+                )}
+                onMouseDown={(e) => {
+                    e.preventDefault();
+                    handleAlignmentChange(BlockType.alignmentRight);
+                }}>
+                        <FaAlignRight color="#9C6035" size={20}/>
+                </button>
+            </div>
+
+            <div className="toolbar__history">
                     <button className="tool-panel__item" onClick={undo}>
                         <FaUndo color="#9C6035" size={20}/>
                     </button>
                     <button className="tool-panel__item" onClick={redo}>
                         <FaRedo color="#9C6035" size={20}/>
                     </button>
-                </div>
             </div>
+         </div>
 
-            <div className="tool-panel__second-row">
+        <div className="tool-panel__second-row">
                 <button
                     className="tool-panel__item"
                     onClick={() => {
@@ -148,22 +182,20 @@ onMouseDown={(e) => {
                         if (url) {
                             addLink(url);
                         }
-                    }}
-                >
+                    }}>
                     <FaLink color="#9C6035" size={20}/>
-                    
                 </button>
+                
                 <button
                     className="tool-panel__item"
                     onClick={() => {
                         console.log(toHtml());
-                    }}
-                >
-                    Print
+                    }}>
+                    <FaPrint color="#9C6035" size={20}/>
                 </button>
 
                 <div className="dropdown">
-                    <button className="tool-panel__item dropbtn">Font Family</button>
+                    <button className="tool-panel__item dropbtn"><p className="family">Font Family</p></button>
                     <div className="dropdown-content">
                         {toolbarOptions.fontFamily.options.map((font, index) => (
                             <button key={index} onClick={(e) => { e.preventDefault();  }}>
