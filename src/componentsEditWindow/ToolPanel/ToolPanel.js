@@ -51,7 +51,7 @@ const ToolPanel = () => {
 
     const handleColorChange = (color) => {
         setSelectedColor(color);
-        setTextColor(color);
+        //setTextColor(color);
     };
     const handleAlignment = (alignment) => {
       toggleBlockType(alignment);
@@ -174,10 +174,24 @@ onMouseDown={(e) => {
                 </div>
 
                  <div className="toolbar__list">
-                    <button className="tool-panel__item" onClick={(e) => e.preventDefault()}>
+                    <button  className={classNames(
+                         "tool-panel__item",
+                          currentBlockType === BlockType.orderList && "tool-panel__item_active"
+                    )}
+                    onMouseDown={(e) => {
+                        e.preventDefault();
+                        toggleBlockType(BlockType.orderList);
+                    }}>
                         <FaListOl color="#9C6035" size={20}/>
                     </button>
-                    <button className="tool-panel__item" onClick={(e) => e.preventDefault()}>
+                    <button className={classNames(
+                         "tool-panel__item",
+                          currentBlockType === BlockType.list && "tool-panel__item_active"
+                    )}
+                    onMouseDown={(e) => {
+                        e.preventDefault();
+                        toggleBlockType(BlockType.list);
+                    }}>
                         <FaListUl color="#9C6035" size={20}/>
                     </button>
                 </div>
