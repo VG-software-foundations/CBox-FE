@@ -1,17 +1,17 @@
 .mainM {
-    font-family: "Alata", sans-serif;
-    background-color: #9C6035;
-    width: 100%; 
-    height: 100vh; 
-    
+  font-family: "Alata", sans-serif;
+  background-color: #9c6035;
+  width: 100%;
+  height: 100vh;
 }
+
 .profil {
-    display: flex;
-    padding: 1vh;
-    height: 92vh;
-    width: 98vw;
-    margin: 0 auto; 
-    background-color: #FEEFE2;
-    border-radius: 30px;
-    overflow: hidden;
-}
+  display: flex;
+  padding: 1vh;
+  height: 92vh;
+  width: 98vw;
+  margin: 0 auto;
+  background-color: #feefe2;
+  border-radius: 30px;
+  overflow: hidden;
+}/*# sourceMappingURL=MainM.css.map */

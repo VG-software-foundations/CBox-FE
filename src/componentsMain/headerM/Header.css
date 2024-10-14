@@ -1,10 +1,10 @@
+.header {
+  padding: 0 3vh 0 0;
+  display: flex;
+  justify-content: end;
+}
 
-.header{
-    padding: 0 3vh 0 0;
-    display: flex;
-    justify-content: end;
-}
 .massButton img {
-    width: 22px;
-    height: 24px;
-}
+  width: 22px;
+  height: 24px;
+}/*# sourceMappingURL=Header.css.map */
