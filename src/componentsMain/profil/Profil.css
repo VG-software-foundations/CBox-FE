@@ -1,5 +1,5 @@
 .containerProfil {
-  padding: 45px 0 0 40px;
+  padding: 8vh 0 0 30px;
   max-width: 150px;
   display: flex;
   flex-direction: column;
@@ -17,9 +17,15 @@
   color: #9c6035;
 }
 
-.profButton,
-.downButton {
-  padding: 0 0 0 13px;
+.profButton{
+  padding: 1vh 0 0.5vh 0.2vw;
+}
+.downButton{
+  padding: 1vh 0 0.5vh 0.5vw;
+}
+.addButton,
+.backetButton {
+  padding: 1vh 0.5vw 0.5vh 0;
 }
 
 .profButton,
@@ -45,7 +51,7 @@
   flex-wrap: wrap;
   gap: 60px;
   justify-content: flex-start;
-  padding: 0 0 0 200px;
+  padding: 0 0 0 12vw;
   max-height: 80vh;
   overflow-y: auto;
 }

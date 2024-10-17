@@ -1,124 +1,135 @@
 .containerProfil {
-    padding: 45px 0 0 40px;
-    max-width: 150px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    font-size: 18px;
-    color: #9c6035;
-  }
-  
-  .findAndScroll {
-    padding: 62px 0 50px 0;
-    display: flex;
-    gap: 10px;
-    flex-direction: column;
-    align-items: flex-end;
-    color: #9c6035;
-  }
-  
-  .profButton,
-  .downButton {
-    padding: 0 0 0 13px;
-  }
-  
-  .profButton,
-  .downButton,
-  .addButton,
-  .backetButton {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    cursor: pointer;
-  }
-  
-  .profButton img,
-  .downButton img,
-  .addButton img,
-  .backetButton img {
-    width: 30px;
-    height: 30px;
-  }
-  
-  .flexContainer {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 60px;
-    justify-content: flex-start;
-    padding: 0 0 0 200px;
-    max-height: 80vh;
-    overflow-y: auto;
-  }
-  
-  .logoM {
-    display: flex;
-    justify-content: center;
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    
-    img {
-      width: 141px;
-      height: 38px;
-    }
-  }
-  
-  .searchInput::placeholder {
-    color: #f4decd;
-  }
-  
-  .card {
-    background-color: #f4decd;
-    border-radius: 20px;
-    padding: 10px;
-    width: 160px;
-    height: 244px;
-    text-align: center;
-  
-    h3 {
-      padding: 0 0 0 3px;
-      width: 140px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin: 0;
-    }
-  }
-  
-  .searchContainer {
-    display: flex;
-    padding: 0 20px 5px 50px;
-    justify-content: center;
-    position: absolute;
-    left: 82%;
-    transform: translateX(-82%);
-  }
-  
-  .searchInput {
-    width: 71vw;
-    height: 40px;
-    padding: 10px;
-    font-size: 16px;
-    background-color: white;
-    border-radius: 5px;
-    margin-right: 10px;
-    color: #9c6035;
-  }
-  
-  .findButton {
-    padding: 10px;
-    background-color: #ffffff;
-    color: #9c6035;
-    border: none;
-    border-radius: 5px;
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
-  
-    img {
-      width: 20px;
-      height: 20px;
-    }
-  }
-  
+  padding: 8vh 0 0 30px;
+  max-width: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-size: 18px;
+  color: #9c6035;
+}
+
+.findAndScroll {
+  padding: 62px 0 50px 0;
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+  align-items: flex-end;
+  color: #9c6035;
+}
+
+.profButton {
+  padding: 1vh 0 0.5vh 0.2vw;
+}
+
+.downButton {
+  padding: 1vh 0 0.5vh 0.5vw;
+}
+
+.addButton,
+.backetButton {
+  padding: 1vh 0.5vw 0.5vh 0;
+}
+
+.profButton,
+.downButton,
+.addButton,
+.backetButton {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  cursor: pointer;
+}
+
+.profButton img,
+.downButton img,
+.addButton img,
+.backetButton img {
+  width: 30px;
+  height: 30px;
+}
+
+.flexContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 60px;
+  justify-content: flex-start;
+  padding: 0 0 0 12vw;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.logoM {
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.logoM img {
+  width: 141px;
+  height: 38px;
+}
+
+.searchInput::-moz-placeholder {
+  color: #f4decd;
+}
+
+.searchInput::placeholder {
+  color: #f4decd;
+}
+
+.card {
+  background-color: #f4decd;
+  border-radius: 20px;
+  padding: 10px;
+  width: 160px;
+  height: 244px;
+  text-align: center;
+}
+
+.card h3 {
+  padding: 0 0 0 3px;
+  width: 140px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+}
+
+.searchContainer {
+  display: flex;
+  padding: 0 20px 5px 50px;
+  justify-content: center;
+  position: absolute;
+  left: 82%;
+  transform: translateX(-82%);
+}
+
+.searchInput {
+  width: 71vw;
+  height: 40px;
+  padding: 10px;
+  font-size: 16px;
+  background-color: white;
+  border-radius: 5px;
+  margin-right: 10px;
+  color: #9c6035;
+}
+
+.findButton {
+  padding: 10px;
+  background-color: #ffffff;
+  color: #9c6035;
+  border: none;
+  border-radius: 5px;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+
+.findButton img {
+  width: 20px;
+  height: 20px;
+}
