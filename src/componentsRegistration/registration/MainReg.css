@@ -6,102 +6,277 @@
 
 .back {
   display: flex;
-  justify-content: end;
-  align-items: center;
-  padding: 4.8vh;
-  height: auto;
+  flex-direction: column;
+  justify-content: flex-end; /* Футер будет внизу отдельно */
+  align-items: flex-end; /* Основной контейнер прижимаем вправо */
+  min-height: 100vh;
+  padding: 1vh 3vw;
+  position: relative; /* Для фиксации футера снизу */
 }
 
 .containerMain {
-  background-color: rgba(255, 255, 255, 0.8);
-  display: flex;
-  align-items: center;
   background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   border-radius: 15px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  width: 50vw;
+  width: 90vw;
+  margin-bottom: 10vh;
   max-width: 414px;
-  height: 80vh;
-  max-height: 624px;
-  min-height: 410px;
-  overflow: hidden;
+  padding: 6vh 2vw;
+  margin-right: 0; /* Прижимаем контейнер вправо */
+}
+.footerReg {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between; /* Для выравнивания лого и языка по разным концам */
+  align-items: center;
+  padding: 10px;
+  margin-top: auto;
+}
+
+.footerReg .container {
+  display: flex;
+  align-items: center;
+}
+
+.logo, .language {
+  display: flex;
+  align-items: center;
+}
+
+.logo img, .language img {
+  width: 70px; /* Установите желаемую ширину для изображений */
+  height: auto; /* Чтобы сохранить пропорции */
 }
 
 .login-box {
-  padding: 7vh 2.2vw 0 2.2vw;
-  width: 48vw;
-  height: 88vh;
-  min-height: 380px;
+  width: 100%;
 }
 
 .choice {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 5vh;
+  margin-bottom: 1vh;
   border-bottom: 2px solid #9c6035;
   padding-bottom: 1vh;
 }
+
 .choice h2 {
   cursor: pointer;
-  font-size: clamp(1.5rem, 4vw, 30px);
+  font-size: 30px; 
   color: #9c6035;
+  margin: 0 20px; 
 }
-.choice h2.active {
+
+.choice h2.passive {
   font-weight: 900;
 }
-.choice h2.passive {
+
+.choice h2.active {
   font-weight: 200;
 }
 
 .input-group {
-  margin-bottom: 3vh;
+  margin-bottom: 1vh;
+  width: 100%; 
 }
+
 .input-group label {
-  padding: 5px;
+  padding: 10px;
   display: block;
-  font-size: clamp(12px, 2vw, 15px);
+  font-size: 16px;
   color: #9c6035;
-  margin-bottom: 5px;
+  margin-bottom: 2px;
 }
+
 .input-group input {
   width: 100%;
-  padding: 1vh;
+  padding: 1vh; 
   border: 1px solid #9c6035;
   border-radius: 20px;
+  font-size: 16px;
 }
 
 .inPut {
-  padding-top: 3vh;
+  padding-top: 2vh;
 }
 
 .login-btn {
-  width: 100%;
+  width: 100%; 
   padding: 1vh;
   background-color: #8b4513;
   color: #fff;
   border: none;
   border-radius: 20px;
   cursor: pointer;
-  font-size: clamp(12px, 2vw, 18px);
+  font-size: 16px;
 }
+
 .login-btn:hover {
   background-color: #a0522d;
 }
 
+
 .social-login {
-  padding-top: 4vh;
-  padding-bottom: 4vh;
-  margin-top: 2vw;
+  padding-top: 1vh;
   text-align: center;
+  font-size: 16px;
 }
 
 .social-icons {
-  justify-content: center;
   display: flex;
-  -moz-column-gap: 3vw;
-       column-gap: 3vw;
+  justify-content: center;
+  gap: 3vw;
 }
+
 .social-icons img {
-  width: 3vw;
-  height: 3vw;
-}/*# sourceMappingURL=Main.css.map */
+  width: 40px;
+  height: 40px;
+}
+
+@media (max-width: 768px) {
+  .back {
+    display: flex;
+     flex-direction: column;
+    justify-content: center;
+    align-items: center; 
+    min-height: 100vh;
+    padding: 2vh 3vw;
+  }
+  .containerMain {
+    width: 95vw;
+    padding: 0.5vh 3vw;
+    margin: 1vh;
+  }
+.footerReg{
+  position: absolute;
+    margin-bottom: 0; /* Фиксируем футер снизу */
+    left: 0; /* Фиксируем футер слева */
+    padding: 10px;
+    margin-top: auto;
+}
+  .choice h2 {
+    font-size: 20px; 
+  }
+
+  .input-group label {
+    font-size: 14px;
+  }
+
+  .login-btn {
+    font-size: 14px;
+    padding: 1.2vh;
+  }
+
+  .social-icons img {
+    width: 35px;
+    height: 35px;
+  }
+}
+
+@media (max-width: 480px) {
+  .back {
+    padding: 0;
+  }
+
+  .containerMain {
+    width: 95vw;
+    padding: 1vh 3vw;
+    margin-top: 0;
+    min-height: auto; 
+  }
+
+  .login-box {
+    padding-bottom: 2vh; 
+  }
+
+  .choice h2 {
+    font-size: 24px; 
+  }
+
+  .input-group label {
+    font-size: 18px;
+  }
+
+  .input-group input {
+    padding: 1.5vh;
+  }
+.social-login{
+  padding-top: 1.5vh;
+  padding-bottom: 1.5vh;
+}
+  .social-icons img {
+
+    width: 40px;
+    height: 40px;
+  }
+}
+
+
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .back {
+    display: flex;
+     flex-direction: column;
+    justify-content: center;
+    align-items: center; 
+    min-height: 100vh;
+    padding: 2vh 2vw;
+  }
+  .containerMain {
+    width: 90vw; 
+    height: 60vh;
+    max-height: 1024px;
+    max-width: 600px; 
+    padding: 1vh 4vw; 
+    
+    margin: 2vh auto; 
+    min-height: auto; 
+  }
+
+  .choice h2 {
+    font-size: 40px; 
+  }
+
+  .input-group label {
+    font-size: 24px; 
+  }
+
+  .login-btn {
+    font-size: 20px; 
+    padding: 1.5vh; 
+  }
+
+  .login-box {
+    padding-top: 1vh;
+    padding-bottom: 5vh; 
+  }
+
+  .social-login {
+    padding-top: 1vh; 
+  }
+  .social-login p{
+    font-size: 20px;
+  }
+
+  .social-icons {
+    padding-bottom: 2vh; }
+
+  .social-icons img {
+    width: 50px; 
+    height: 50px;
+  }
+  .logo img, .language img {
+    width: 90px; /* Установите желаемую ширину для изображений */
+    height: auto; /* Чтобы сохранить пропорции */
+  }
+}
+
+
+
+

@@ -1,4 +1,3 @@
-import RegFooter from "../registartionfooter/RegFooter";
 import MainReg from "../registration/MainReg";
 import './RegistrationWind.css';
 
@@ -6,9 +5,8 @@ function RegistrationWind(){
 return(
 
     <div className="containerReg">
-    <div className="AppEnter">
+    <div className="AppReg">
       <MainReg/>
-      <RegFooter/> 
     </div>
     </div>
 

@@ -12,9 +12,9 @@ function App() {
     <Router>
     <div className="App">
     <Routes>
-         <Route path="/" element={<EnterWind />} />
-          <Route path="/profil" element={<MainM />} />
-          <Route path="/registration" element={<RegistrationWind/>}/>
+          <Route path="/" element={<EnterWind />} />
+          {/* <Route path="/" element={<MainM />} />  */}
+          {/* <Route path="/" element={<RegistrationWind/>}/> */}
           <Route path="/editor" element={
             <TextEditorProvider>
               <ToolPanel />
