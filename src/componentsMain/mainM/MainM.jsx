@@ -1,6 +1,7 @@
 import HeaderM from "../headerM/Header";
 import "./MainM.css"
 import Profil from "../profil/Profil";
+import Information from "../information/Information";
 
 
 function MainM() {

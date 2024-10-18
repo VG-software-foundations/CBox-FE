@@ -1,0 +1,67 @@
+.modalInf{
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(0,0,0,0.4);
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.5s;
+}
+.modalInf.active{
+    opacity: 1;
+    pointer-events: all;
+}
+.modalInfContant{
+    padding: 20px;
+    border-radius: 12px;
+    background-color: #f4decd;
+    height: 290px;
+    width: 320px;
+    transform: scale(0.5);
+    transition: 0.4s all;
+    font-size: 30px;
+    color: #9c6035;
+}
+.modalInfContant.active{
+transform: scale(1);
+}
+.renameButton img,
+.inButton img{
+    height: 28px;
+}
+.containerObsh{
+    padding: 5px 0 5px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    border-top: 2px solid #9c6035;
+    border-bottom: 2px solid #9c6035;
+}
+.inButton, .renameButton, .copyButton{
+    padding: 5px 0 5px 0; 
+    display: flex;
+    align-items: center;
+}
+.openButton{
+    display: flex;
+    align-items: center;  
+}
+
+.delButton{
+    padding: 5px 0 0 0;
+    display: flex;
+    align-items: center;
+}
+
+.modalInfContant img{
+    height: 30px;
+    padding: 0 20px 0 0;
+    
+}
