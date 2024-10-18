@@ -1,4 +1,5 @@
 import './Header.css'
+import { useNavigate } from 'react-router-dom';
 import langu from './../img/Mars.png'
 import massage from './../img/DinDin.png'
 import exitImg from './../img/Ex.png'
@@ -6,6 +7,7 @@ import icon from './../img/Victor.png'
 
 
 function Header(){
+    const navigate = useNavigate();
 return(
     <headerM className="header">
         <div className="containerHeader">
@@ -19,7 +21,7 @@ return(
         <img src={icon}></img>
         </button>
         <button className="exitIcon">
-        <img src={exitImg}></img>
+        <img src={exitImg} onClick={() => navigate('/editor')}></img>
         </button>
         </div>
     </headerM>

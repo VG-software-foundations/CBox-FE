@@ -113,31 +113,15 @@ export const useEditor = (html) => {
     if (e.keyCode === 81 && KeyBindingUtil.hasCommandModifier(e)) {
       return "accent";
     }
-
     return getDefaultKeyBinding(e);
   }, []);
 
+  
   const toHtml = useCallback(
     () => stateToHTML(state.getCurrentContent()),
     [state]
   );
 
-  const setTextColor = useCallback((color) => {
-    const selection = state.getSelection();
-    if (!selection.isCollapsed()) { // Убедитесь, что текст выделен
-        const contentState = state.getCurrentContent();
-        const contentStateWithEntity = contentState.createEntity('TEXT_COLOR', 'MUTABLE', { color });
-        const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-
-        // Обновляем состояние редактора
-        const newState = EditorState.set(state, { currentContent: contentStateWithEntity });
-        
-        // Устанавливаем выделение на выделенный текст с новым цветом
-        const updatedState = RichUtils.toggleLink(newState, selection, entityKey);
-        
-        setState(updatedState);
-    }
-}, [state]);
 
 
   return useMemo(
@@ -153,7 +137,6 @@ export const useEditor = (html) => {
       setEntityData,
       handleKeyCommand,
       handlerKeyBinding,
-      setTextColor, // Добавьте эту функцию в возврат
     }),
     [
       state,
@@ -166,7 +149,6 @@ export const useEditor = (html) => {
       setEntityData,
       handleKeyCommand,
       handlerKeyBinding,
-      setTextColor, // Добавьте это
     ]
   );
 };

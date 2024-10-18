@@ -1,4 +1,4 @@
-
+import { useNavigate } from 'react-router-dom';
 import React, { useState } from "react";
 import { useEditorApi } from "./../TextEditor/context";
 import classNames from "classnames";
@@ -59,6 +59,9 @@ const ToolPanel = () => {
     const handleAlignmentChange = (alignmentType) => {
         toggleBlockType(alignmentType);
       };
+      
+    const navigate = useNavigate();
+
     return (
         <div className="tool-panel">
             <header className="tool-panel__header">
@@ -73,7 +76,7 @@ const ToolPanel = () => {
                      </div>
                     </button>
                     <button className="tool-panel__icon-button">
-                    <img src={profil}></img>
+                    <img src={profil} onClick={() => navigate('/')}></img>
                     </button>
                 </div>
             </header>

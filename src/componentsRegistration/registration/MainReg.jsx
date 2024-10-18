@@ -1,31 +1,31 @@
-import './Main.css'
+import './MainReg.css'
 
 import { useNavigate } from 'react-router-dom';
 import google from './../img/images/flat-color-icons_google@2x.jpg'
 import face from './../img/images/Vector.png'
 
-function Main(){
+function MainReg(){
     const navigate = useNavigate();
 
     const handleLogin = (event) => {
-        event.preventDefault();
-        const email = event.target.email.value;
-        const password = event.target.password.value;
+      event.preventDefault();
+      const email = event.target.email.value;
+      const password = event.target.password.value;
+  
+      if (email === 'test@example.com' && password === 'password') {
+        navigate('/profile');
+      } else {
+        alert('Неверные учетные данные');
+      }
+    };
     
-        if (email === 'test@example.com' && password === 'password') {
-          navigate('/profile');
-        } else {
-          alert('Неверные учетные данные');
-        }
-      };
-      
     return(
         <div className='back'>
     <div className="containerMain">
         <div className="login-box">
             <div className="choice">
-                <h2 className="login-title-enter active">Вход</h2>
-                <h2 className="login-title-registration passive" onClick={() => navigate('/registration')}>Регистрация</h2>
+                <h2 className="login-title-enter active" onClick={() => navigate('/')}>Вход</h2>
+                <h2 className="login-title-registration passive">Регистрация</h2>
             </div>
             <form action="#" method="post">
                 <div className="input-group">
@@ -58,4 +58,4 @@ function Main(){
     </div>
     )
 }
-export default Main;
+export default MainReg;

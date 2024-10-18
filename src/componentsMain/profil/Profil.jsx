@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import './Profil.css'; // Подключаем стили
+import { useNavigate } from 'react-router-dom';
+import './Profil.css';
 import icon from './../img/Victor2.png';
 import download from './../img/download.png';
 import add from './../img/add.png';
@@ -11,6 +12,7 @@ import findM from './../img/search.png';
 function Profil() {
   const [documents, setDocuments] = useState([]); 
   const [searchTerm, setSearchTerm] = useState(''); 
+  const navigate = useNavigate();
 
   const handleFileUpload = (event) => {
     const files = Array.from(event.target.files);
@@ -31,7 +33,7 @@ function Profil() {
         <button className="downButton" onClick={() => document.getElementById('fileInput').click()}>
           <img src={download} alt="Загрузить" /> Загрузить
         </button>
-        <button className="addButton">
+        <button className="addButton" onClick={() => navigate('/editor')}>
           <img src={add} alt="Создать" /> Создать
         </button>
         <button className="backetButton">
