@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import google from './../img/images/flat-color-icons_google@2x.jpg';
 import face from './../img/images/Vector.png';
 import logoMain from './../img/images/Logo.png';
+import { LanguageContext } from './../../lang'; 
 import './Main.css';
 
 const langArr = {
@@ -34,8 +35,12 @@ const langArr = {
 
 function Main() {
     const navigate = useNavigate();
-    
-    const [language, setLanguage] = useState('ru'); 
+    const { language, changeLanguage } = useContext(LanguageContext);
+
+    const handleLanguageChange = (event) => {
+        const selectedLang = event.target.value;
+        changeLanguage(selectedLang); 
+    };
 
     const handleLogin = (event) => {
         event.preventDefault();
@@ -47,19 +52,6 @@ function Main() {
         } else {
             alert('Неверные учетные данные');
         }
-    };
-
-    useEffect(() => {
-        const hash = window.location.hash.substr(1);
-        if (hash && ['en', 'ru'].includes(hash)) {
-            setLanguage(hash);
-        }
-    }, []);
-
-    const changeLanguage = (event) => {
-        const selectedLang = event.target.value;
-        setLanguage(selectedLang);
-        window.location.hash = selectedLang;
     };
 
     return (
@@ -105,7 +97,7 @@ function Main() {
                         <img src={logoMain} alt="Logo" />
                     </div>
                     <div className="language">
-                        <select className='select' value={language} onChange={changeLanguage}>
+                        <select className='select' value={language} onChange={handleLanguageChange}>
                             <option value="ru">Русский</option>
                             <option value="en">English</option>
                         </select>

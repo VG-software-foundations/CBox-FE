@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useEditorApi } from "./../TextEditor/context";
 import classNames from "classnames";
 import { AlignmentType, BlockType, InlineStyle } from "../TextEditor/config";
@@ -8,11 +8,17 @@ import logo from "./../images/logo.png"
 import profil from "./../images/profil.png"
 import planet from "./../images/mdi_planet.png"
 import ModalAccess from "../ModalAccess/modalAccess"
+import { LanguageContext } from './../../lang'; 
 
 import { FaPrint, FaBold, FaLink, FaListOl, FaItalic, FaUnderline, FaStrikethrough, FaAlignLeft, FaAlignCenter, FaAlignRight, FaListUl, FaUndo, FaRedo, FaPalette } from 'react-icons/fa';
 
 
-
+const langArrToolPanel = {
+    settings: {
+      ru: 'Настройки доступа',
+      en: 'Settings of access',
+    },
+  };
 const toolbarOptions = {
     fontFamily: {
         options: ["Arial", "Georgia", "Impact", "Tahoma", "Times New Roman", "Verdana"],
@@ -53,7 +59,7 @@ const ToolPanel = () => {
     } = useEditorApi();
 
     const [selectedColor, setSelectedColor] = useState("black"); 
-
+    const { language } = useContext(LanguageContext);
     const handleColorChange = (color) => {
         setSelectedColor(color);
         //setTextColor(color);
@@ -75,7 +81,7 @@ const ToolPanel = () => {
                 <div className="tool-panel__icons">
                     <button className="settings_of_access" onClick={() => setModalActive(true)}>
                      <div className="on_button_settings">
-                        <img src={planet}></img><p className="settings">Настройки доступа</p>
+                        <img src={planet}></img><p className="settings">{langArrToolPanel.settings[language]}</p>
                      </div>
                     </button>
                     <button className="tool-panel__icon-button">
