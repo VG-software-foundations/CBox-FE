@@ -7,11 +7,11 @@
 .back {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end; /* Футер будет внизу отдельно */
-  align-items: flex-end; /* Основной контейнер прижимаем вправо */
+  justify-content: flex-end; 
+  align-items: flex-end; 
   min-height: 100vh;
   padding: 1vh 3vw;
-  position: relative; /* Для фиксации футера снизу */
+  position: relative; 
 }
 
 .containerMain {
@@ -25,7 +25,7 @@
   margin-bottom: 10vh;
   max-width: 414px;
   padding: 6vh 2vw;
-  margin-right: 0; /* Прижимаем контейнер вправо */
+  margin-right: 0; 
 }
 .footerReg {
   position: absolute;
@@ -33,7 +33,7 @@
   left: 0;
   width: 100%;
   display: flex;
-  justify-content: space-between; /* Для выравнивания лого и языка по разным концам */
+  justify-content: space-between; 
   align-items: center;
   padding: 10px;
   margin-top: auto;
@@ -138,7 +138,9 @@
   width: 40px;
   height: 40px;
 }
-
+option{
+  color:#9c6035;
+}
 @media (max-width: 768px) {
   .back {
     display: flex;
@@ -219,7 +221,7 @@
 
 
 
-@media (min-width: 768px) and (max-width: 1024px) {
+@media (min-width: 768px) and (max-width: 1023px) {
   .back {
     display: flex;
      flex-direction: column;
@@ -277,6 +279,44 @@
   }
 }
 
+@media (max-height: 600px) and (max-width: 1024px) {
+  .back {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* Футер будет внизу отдельно */
+    align-items: flex-end;
+    min-height: 100vh;
+    padding: 4vh 1vw;
+    position: relative; /* Для фиксации футера снизу */
+  }
+  .containerMain {
+    width: 80vw;
+    height: 100vh;
+    max-width: 400px;
+    padding: 1vh 4vw;
+  }
 
+  .choice h2 {
+    font-size: clamp(22px, 5vw, 30px);
+  }
+
+  .input-group label {
+    font-size: 20px;
+  }
+
+  .login-btn {
+    font-size: 18px;
+  }
+
+  .social-login {
+    font-size: 18px;
+    padding-top: 1.5vh;
+  }
+
+  .social-icons img {
+    width: 30px;
+    height: 30px;
+  }
+}
 
 

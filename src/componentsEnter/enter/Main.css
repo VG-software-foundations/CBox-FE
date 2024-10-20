@@ -7,11 +7,11 @@
 .backM {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end; /* Футер будет внизу отдельно */
-  align-items: flex-end; /* Основной контейнер прижимаем вправо */
+  justify-content: flex-end; 
+  align-items: flex-end; 
   min-height: 100vh;
-  padding: 1vh 3vw;
-  position: relative; /* Для фиксации футера снизу */
+  padding: 6vh 3vw;
+  position: relative; 
 }
 
 .containerMainM {
@@ -26,7 +26,7 @@
   margin-top: 2vh;
   max-width: 414px;
   padding: 6vh 2vw;
-  margin-right: 0; /* Прижимаем контейнер вправо */
+  margin-right: 0; 
 }
 
 .footer {
@@ -35,7 +35,7 @@
   left: 0;
   width: 100%;
   display: flex;
-  justify-content: space-between; /* Для выравнивания лого и языка по разным концам */
+  justify-content: space-between; 
   align-items: center;
   padding: 10px;
   margin-top: auto;
@@ -127,12 +127,15 @@ align-items: center;
   height: 40px;
 }
 
+.select{
+  padding: 0 0 5px 0;
+}
 /* Адаптация для небольших экранов */
 @media (max-width: 768px) {
   .backM {
     flex-direction: column;
     justify-content: center;
-    align-items: center; /* Центрируем всё */
+    align-items: center; 
     
   }
 
@@ -149,7 +152,7 @@ align-items: center;
   left: 0;
   width: 100%;
   display: flex;
-  justify-content: space-between; /* Для выравнивания лого и языка по разным концам */
+  justify-content: space-between; 
   align-items: center;
   padding: 10px;
   margin-top: auto;
@@ -192,10 +195,10 @@ align-items: center;
   }
   .footer {
     position: absolute;
-    margin-bottom: 0; /* Фиксируем футер снизу */
-    left: 0; /* Фиксируем футер слева */
+    margin-bottom: 0; 
+    left: 0; 
     padding: 10px;
-    margin-top: auto; /* Футер прижимаем вниз */
+    margin-top: auto; 
   }
   .choiceM h2 {
     font-size: 24px;
@@ -214,7 +217,7 @@ align-items: center;
 }
 
 /* Адаптация для больших экранов */
-@media (min-width: 768px) and (max-width: 1024px) {
+@media (min-width: 768px) and (max-width: 1023px) {
   .backM{
     display: flex;
   justify-content: center;
@@ -246,5 +249,44 @@ align-items: center;
   .social-iconsM img {
     width: 50px;
     height: 50px;
+  }
+}
+
+@media (max-height: 600px) and (max-width: 1024px) {
+  .backM {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; 
+    align-items: flex-end; 
+    min-height: 100vh;
+    padding: 1vh 3vw;
+    position: relative; 
+  }
+  .containerMainM {
+    width: 80vw;
+    max-width: 400px;
+    padding: 4vh 4vw;
+  }
+
+  .choiceM h2 {
+    font-size: clamp(20px, 5vw, 25px);
+  }
+
+  .input-groupM label {
+    font-size: 20px;
+  }
+
+  .login-btnM {
+    font-size: 18px;
+  }
+
+  .social-loginM {
+    font-size: 18px;
+    padding-top: 1.5vh;
+  }
+
+  .social-iconsM img {
+    width: 30px;
+    height: 30px;
   }
 }
