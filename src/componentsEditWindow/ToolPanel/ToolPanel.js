@@ -7,8 +7,11 @@ import "./ToolPanel.css";
 import logo from "./../images/logo.png"
 import profil from "./../images/profil.png"
 import planet from "./../images/mdi_planet.png"
+import ModalAccess from "../ModalAccess/modalAccess"
 
 import { FaPrint, FaBold, FaLink, FaListOl, FaItalic, FaUnderline, FaStrikethrough, FaAlignLeft, FaAlignCenter, FaAlignRight, FaListUl, FaUndo, FaRedo, FaPalette } from 'react-icons/fa';
+
+
 
 const toolbarOptions = {
     fontFamily: {
@@ -61,7 +64,7 @@ const ToolPanel = () => {
       };
       
     const navigate = useNavigate();
-
+    const [modalActive, setModalActive] = useState(false);
     return (
         <div className="tool-panel">
             <header className="tool-panel__header">
@@ -70,7 +73,7 @@ const ToolPanel = () => {
                     <div className="name-title">CBox</div>
                 </div>
                 <div className="tool-panel__icons">
-                    <button className="settings_of_access">
+                    <button className="settings_of_access" onClick={() => setModalActive(true)}>
                      <div className="on_button_settings">
                         <img src={planet}></img><p className="settings">Настройки доступа</p>
                      </div>
@@ -255,6 +258,10 @@ const ToolPanel = () => {
                     </div>
                 </div>
             </div>
+            <ModalAccess
+        active={modalActive} 
+        setActive={setModalActive} 
+      />
         </div>
     );
 };

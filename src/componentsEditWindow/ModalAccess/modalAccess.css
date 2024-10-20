@@ -1,0 +1,198 @@
+.modalAccess{
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(0,0,0,0.4);
+    position: fixed;
+    top: 0;
+    left: 0;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.5s;
+}
+
+.modalAccess.active{
+    opacity: 1;
+    pointer-events: all;
+}
+
+.modalAccessContant{
+    padding: 20px 10px 10px 10px;
+    border-radius: 12px;
+    background-color: #FEEFE2;
+    height: 300px;
+    width: 500px;
+    transform: scale(0.5);
+    transition: 0.4s all;
+    font-size: 30px;
+    color: #9c6035;
+}
+
+.modalAccessContant.active{
+    transform: scale(1);
+}
+
+.exitButton{
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 10px 10px 0 0;
+}
+
+span {
+    position: absolute;
+    top: 0;
+    padding: 10px 0 0 5px;
+    font-size: 20px;
+}
+
+.exitButton img {
+    display: flex;
+    width: 15px;
+    height: 15px;
+}
+
+.containerFindAcc {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 22px 0 0 0;
+}
+
+.textInput {
+    height: 20px;
+    width: 250px;
+    padding: 0 5px;
+    background-color: white;
+    border-radius: 10px;
+    font-size: 12px;
+    outline: none;
+    color: #9c6035;
+}
+
+.textInput::placeholder {
+    color: #f4decd;
+}
+
+.viewButton {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    height: 20px;
+    padding: 0 10px;
+    background-color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    color: #f4decd;
+}
+
+.viewButton img {
+    width: 15px;
+    height: 10px;
+}
+
+.inviteButton {
+    height: 20px;
+    width: 80px;
+    padding: 2px 0 0 0;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    color: #f4decd;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.3s ease;
+}
+
+.inviteButton:hover {
+    background-color: #9c6035;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdownButton {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    height: 20px;
+    width: 130px;
+    padding: 0 10px;
+    background-color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 12px;
+    color: #f4decd;
+}
+.dropdownButton img{
+    position: absolute;
+    right: 0;
+    padding: 0 5px 0 0;
+    height: 10px;
+    width: 20px;
+}
+
+.dropdownMenu {
+    position: absolute;
+    top: 25px;
+    left: 0;
+    background-color: white;
+    border-radius: 10px;
+    z-index: 10;
+    width: 150px;
+    padding: 5px 0;
+}
+.dropdownMenu img{
+    padding: 0 0 0 5px;
+    height: 10px;
+}
+
+.dropdownItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 12px;
+    color: #9c6035;
+}
+
+.dropdownItem:hover {
+    background-color: #f0f0f0;
+}
+
+.selectedIcon {
+    width: 15px;
+    height: 15px;
+}
+
+.noButton{
+    display: flex;
+    height: 17px;
+    width: 145px;
+    font-size: 12px;
+    justify-content: center;
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    background-color: white;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+}
+.noButton:hover {
+    background-color: #ffd2b2;
+}
+.noButton img{
+    align-items: center;
+    height: 12px;
+}
