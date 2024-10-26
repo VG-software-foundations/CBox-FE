@@ -1,10 +1,11 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import google from './../img/images/flat-color-icons_google@2x.jpg';
 import face from './../img/images/Vector.png';
 import logoMain from './../img/images/Logo.png';
 import { LanguageContext } from './../../lang'; 
 import './Main.css';
+import { useAuth0 } from "@auth0/auth0-react";
 
 const langArr = {
     "login-title-enterM activeM": {
@@ -36,23 +37,25 @@ const langArr = {
 function Main() {
     const navigate = useNavigate();
     const { language, changeLanguage } = useContext(LanguageContext);
+    const { loginWithRedirect, isAuthenticated } = useAuth0(); // Добавляем isAuthenticated из Auth0
 
     const handleLanguageChange = (event) => {
         const selectedLang = event.target.value;
         changeLanguage(selectedLang); 
     };
 
+    // Обработчик для вызова loginWithRedirect
     const handleLogin = (event) => {
-        event.preventDefault();
-        const email = event.target.email.value;
-        const password = event.target.password.value;
-
-        if (email === 'test@example.com' && password === 'password') {
-            navigate('/profile');
-        } else {
-            alert('Неверные учетные данные');
-        }
+        event.preventDefault(); // Предотвращаем перезагрузку страницы
+        loginWithRedirect();
     };
+
+    // Проверяем аутентификацию и перенаправляем, если пользователь зарегистрирован
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate('/profil');
+        }
+    }, [isAuthenticated, navigate]); // Запускаем эффект при изменении isAuthenticated или navigate
 
     return (
         <div className='backM'>
@@ -64,7 +67,7 @@ function Main() {
                             {langArr["login-title-registrationM passiveM"][language]}
                         </h2>
                     </div>
-                    <form onSubmit={handleLogin}>
+                    <form>
                         <div className="input-groupM">
                             <label htmlFor="email" className='lgn-email'>{langArr["lgn-email"][language]}</label>
                             <input type="email" id="email" name="email" required />
@@ -74,15 +77,17 @@ function Main() {
                             <input type="password" id="password" name="password" required />
                         </div>
                         <div className="inPutM">
-                            <button type="submit" className="login-btnM">{langArr["login-btnM"][language]}</button>
+                            <button type="submit" className="login-btnM" onClick={handleLogin}>
+                                {langArr["login-btnM"][language]}
+                            </button>
                         </div>
                     </form>
                     <div className="social-loginM">
                         <p>{langArr["social-loginM"][language]}</p>
                         <div className="social-iconsM">
-                            <div className="google">
+                            <button type="button" className="google" onClick={handleLogin}>
                                 <img src={google} alt="Google Login" />
-                            </div>
+                            </button>
                             <div className="facebook">
                                 <img src={face} alt="Facebook Login" />
                             </div>
