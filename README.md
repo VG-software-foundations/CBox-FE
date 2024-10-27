@@ -22,3 +22,7 @@ https://www.figma.com/design/jBZrQqgMDAXNQLc1Mm6iGX/Untitled?node-id=201-2&node-
 
 API server link:
 https://github.com/VG-software-foundations/CBox-BE
+
+Instructions for organizing network interaction:
+
+We use a local network if we can meet in person and use hamachi otherwise. To send requests and connect the backend and frontend, we use the axios library, swagger and use ready-made functions and methods.
