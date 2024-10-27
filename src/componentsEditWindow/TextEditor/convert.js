@@ -3,6 +3,10 @@ import { CUSTOM_STYLE_MAP, BlockType, EntityType, InlineStyle, AlignmentType } f
 
 export const stateToHTML = convertToHTML({
   styleToHTML: (style) => {
+    if (style.startsWith(InlineStyle.TEXT_COLOR)) {
+      const color = style.split('-')[1]; // Извлекаем цвет из стиля
+      return <span style={{ color: color }} />;
+    }
     switch (style) {
       case InlineStyle.BOLD:
         return <strong />;
@@ -12,8 +16,6 @@ export const stateToHTML = convertToHTML({
         return <span className="underline" style={{ textDecoration: "underline" }} />;
       case InlineStyle.STRIKETHROUGH:
         return <span className="line-through" style={{ textDecoration: "line-through" }} />;
-      case InlineStyle.TEXT_COLOR:
-          return (text, { color }) => `<span style="color: ${color}">${text}</span>`;
       default:
         return null;
     }
@@ -61,10 +63,11 @@ export const HTMLtoState = convertFromHTML({
       return currentStyle.add(InlineStyle.STRIKETHROUGH);
     }
     if (nodeName === "span" && node.style.color) {
-      return currentStyle.add('TEXT_COLOR'); 
+      return currentStyle.add(`${InlineStyle.TEXT_COLOR}-${node.style.color}`); // Добавляем цвет как часть названия стиля
     }
     return currentStyle;
   },
+  
 
   htmlToBlock(nodeName, node, last) {
     if (node.style && node.style.textAlign === 'left') {

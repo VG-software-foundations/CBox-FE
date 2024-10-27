@@ -1,5 +1,6 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import google from './../img/images/flat-color-icons_google@2x.jpg';
 import face from './../img/images/Vector.png';
 import logoMain from './../img/images/Logo.png';
@@ -37,25 +38,57 @@ const langArr = {
 function Main() {
     const navigate = useNavigate();
     const { language, changeLanguage } = useContext(LanguageContext);
-    const { loginWithRedirect, isAuthenticated } = useAuth0(); // Добавляем isAuthenticated из Auth0
+    const { isAuthenticated, loginWithRedirect, getIdTokenSilently, user } = useAuth0();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
 
     const handleLanguageChange = (event) => {
         const selectedLang = event.target.value;
         changeLanguage(selectedLang); 
     };
 
-    // Обработчик для вызова loginWithRedirect
-    const handleLogin = (event) => {
-        event.preventDefault(); // Предотвращаем перезагрузку страницы
-        loginWithRedirect();
+    const sendAuth0TokenToServer = async () => {
+        if (isAuthenticated) {
+            try {
+                const token = await getIdTokenSilently();
+                await axios.post(
+                    'http://localhost:8080/',
+                    { user: user.name, email: user.email },
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
+                );
+            } catch (error) {
+                console.error('Ошибка отправки токена на сервер', error);
+            }
+        }
     };
 
-    // Проверяем аутентификацию и перенаправляем, если пользователь зарегистрирован
     useEffect(() => {
-        if (isAuthenticated) {
+        sendAuth0TokenToServer();
+    }, [isAuthenticated]);
+
+    const handleFormLogin = async (event) => {
+        event.preventDefault();
+        try {
+            const response = await axios.post('YOUR_SERVER_URL/auth/login', {
+                email,
+                password
+            });
+
+            const { token } = response.data;
+            localStorage.setItem('jwt_token', token); 
+
             navigate('/profil');
+        } catch (err) {
+            console.error("Ошибка аутентификации:", err);
+            setError('Ошибка аутентификации. Проверьте email и пароль.');
         }
-    }, [isAuthenticated, navigate]); // Запускаем эффект при изменении isAuthenticated или navigate
+    };
 
     return (
         <div className='backM'>
@@ -67,17 +100,32 @@ function Main() {
                             {langArr["login-title-registrationM passiveM"][language]}
                         </h2>
                     </div>
-                    <form>
+                    <form onSubmit={handleFormLogin}>
                         <div className="input-groupM">
                             <label htmlFor="email" className='lgn-email'>{langArr["lgn-email"][language]}</label>
-                            <input type="email" id="email" name="email" required />
+                            <input 
+                                type="email" 
+                                id="email" 
+                                name="email" 
+                                value={email} 
+                                onChange={(e) => setEmail(e.target.value)} 
+                                required 
+                            />
                         </div>
                         <div className="input-groupM">
                             <label htmlFor="password" className='pass'>{langArr["pass"][language]}</label>
-                            <input type="password" id="password" name="password" required />
+                            <input 
+                                type="password" 
+                                id="password" 
+                                name="password" 
+                                value={password} 
+                                onChange={(e) => setPassword(e.target.value)} 
+                                required 
+                            />
                         </div>
+                        {error && <p className="error">{error}</p>}
                         <div className="inPutM">
-                            <button type="submit" className="login-btnM" onClick={handleLogin}>
+                            <button type="submit" className="login-btnM">
                                 {langArr["login-btnM"][language]}
                             </button>
                         </div>
@@ -85,7 +133,7 @@ function Main() {
                     <div className="social-loginM">
                         <p>{langArr["social-loginM"][language]}</p>
                         <div className="social-iconsM">
-                            <button type="button" className="google" onClick={handleLogin}>
+                            <button type="button" className="google" onClick={() => loginWithRedirect()}>
                                 <img src={google} alt="Google Login" />
                             </button>
                             <div className="facebook">
@@ -95,7 +143,6 @@ function Main() {
                     </div>
                 </div>
             </div>
-
             <div className="footer">
                 <div className="container">
                     <div className="logo">

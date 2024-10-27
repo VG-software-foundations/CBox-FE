@@ -8,6 +8,7 @@ import {
   RichUtils,
 } from "draft-js";
 import React, { useCallback, useMemo, useState } from "react";
+import Immutable from "immutable";
 import { BlockType, EntityType, InlineStyle, KeyCommand } from "./config";
 import { HTMLtoState, stateToHTML } from "./convert";
 import LinkDecorator from "./Link";
@@ -59,6 +60,21 @@ export const useEditor = (html) => {
       );
     });
   }, []);
+
+  const setTextColor = (color) => {
+    const selection = state.getSelection();
+    const contentState = state.getCurrentContent();
+    const contentStateWithEntity = contentState.createEntity(
+      "TEXT_COLOR",
+      "MUTABLE",
+      { color }
+    );
+    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+    const newEditorState = EditorState.set(state, { currentContent: contentStateWithEntity });
+    setState(RichUtils.toggleLink(newEditorState, selection, entityKey));
+  };
+  
+
 
   const addEntity = useCallback(
     (entityType, data, mutability) => {
@@ -135,6 +151,7 @@ export const useEditor = (html) => {
       toHtml,
       addLink,
       setEntityData,
+      setTextColor,
       handleKeyCommand,
       handlerKeyBinding,
     }),
@@ -147,6 +164,7 @@ export const useEditor = (html) => {
       toHtml,
       addLink,
       setEntityData,
+      setTextColor,
       handleKeyCommand,
       handlerKeyBinding,
     ]
