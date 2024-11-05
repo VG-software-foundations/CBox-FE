@@ -42,69 +42,95 @@ const langArr = {
 function MainReg() {
     const navigate = useNavigate();
     const { language, changeLanguage } = useContext(LanguageContext);
-    const { loginWithRedirect, getIdTokenSilently } = useAuth0();
+    const { loginWithRedirect, getIdTokenSilently, user, isAuthenticated } = useAuth0();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
 
-    const handleLanguageChange = (event) => {
-        const selectedLang = event.target.value;
-        changeLanguage(selectedLang); 
+
+    const sendTokenToServer = async (token) => {
+        try {
+            const response = await axios.post('http://10.160.44.249:8080/users',
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+        } catch (err) {
+            console.error('Ошибка:', err);
+        }
     };
 
-    const handleFormRegister = async (event) => {
-        event.preventDefault();
-
+    const handleFormRegister = async (e) => {
+        e.preventDefault();
+    
         if (password !== confirmPassword) {
             setError("Пароли не совпадают");
             return;
         }
-
+    
         try {
-            const response = await axios.post('YOUR_SERVER_URL/auth/register', {
-                email,
-                password,
+            const response = await axios.post('http://10.160.44.249:8080/users/sign-up', {
+                username: email,
+                password: password,
+                role: "USER",
             });
-
-            localStorage.setItem('jwt_token', response.data.token);
+    
+            const token = response.token;
+            console.log("Получен токен:", token);
+            localStorage.setItem('jwtToken', token);
             navigate('/profil'); 
+    
         } catch (err) {
-            console.error(err);
-            setError(err.message || "Ошибка регистрации. Попробуйте снова.");
+            console.error("Ошибка при регистрации:", err);
+            setError("Не удалось зарегистрироваться. Попробуйте снова.");
         }
     };
+    
+    
 
     const handleGoogleSignup = async () => {
         try {
-            await loginWithRedirect({ screen_hint: 'signup' });
+            console.log('дорвааа');
+            await loginWithRedirect();
         } catch (err) {
-            console.error('Ошибка при авторизации через Google', err);
+            console.error('Error during Google sign-in:', err);
         }
     };
-
-    const handleGoogleLogin = async () => {
-        try {
-            const token = await getIdTokenSilently();
-            const response = await axios.post('YOUR_SERVER_URL/auth/google-login', {
-                token,
-            }, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
     
-            localStorage.setItem('jwt_token', response.data.token);
-            navigate('/profil'); 
-        } catch (error) {
-            console.error('Ошибка при авторизации через Google', error);
+    
+    useEffect(() => {
+        console.log('isAuthenticated:', isAuthenticated);
+        
+        if (isAuthenticated) {
+            const fetchTokenAndSendToServer = async () => {
+                try {
+                    const token = await getIdTokenSilently();
+                    console.log('Received token:', token);
+                    await sendTokenToServer(token);
+                } catch (err) {
+                    console.error('Error obtaining token:', err);
+                }
+            };
+            fetchTokenAndSendToServer();
         }
+    }, [isAuthenticated===true, getIdTokenSilently]);
+    
+
+    const handleLanguageChange = (event) => {
+        event.preventDefault(); 
+        const selectedLang = event.target.value;
+        changeLanguage(selectedLang);
+        localStorage.setItem('selectedLanguage', selectedLang); 
     };
     
     useEffect(() => {
-        const { search } = window.location;
-        if (search.includes('code=')) {
-            handleGoogleLogin(); 
+        const savedLanguage = localStorage.getItem('selectedLanguage');
+        if (savedLanguage) {
+            changeLanguage(savedLanguage);
         }
     }, []);
 

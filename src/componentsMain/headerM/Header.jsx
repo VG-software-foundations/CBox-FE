@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { LanguageContext } from './../../lang'; 
 import { useAuth0 } from "@auth0/auth0-react";
 
@@ -9,12 +9,22 @@ import icon from './../img/Victor.png';
 
 function Header() {
     const { language, changeLanguage } = useContext(LanguageContext); 
-    const { logout } = useAuth0(); // Получаем функцию logout из Auth0
+    const { logout } = useAuth0(); 
 
     const handleLanguageChange = (event) => {
+        event.preventDefault(); 
         const selectedLang = event.target.value;
-        changeLanguage(selectedLang); 
+        changeLanguage(selectedLang);
+        localStorage.setItem('selectedLanguage', selectedLang);
     };
+    
+    useEffect(() => {
+        const savedLanguage = localStorage.getItem('selectedLanguage');
+        if (savedLanguage) {
+            changeLanguage(savedLanguage);
+        }
+    }, []);
+    
 
     return (
         <header className="header">

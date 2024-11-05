@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import google from './../img/images/flat-color-icons_google@2x.jpg';
 import face from './../img/images/Vector.png';
+import axios from 'axios';
 import logoMain from './../img/images/Logo.png';
 import { LanguageContext } from './../../lang'; 
 import './Main.css';
@@ -38,46 +38,41 @@ const langArr = {
 function Main() {
     const navigate = useNavigate();
     const { language, changeLanguage } = useContext(LanguageContext);
-    const { isAuthenticated, loginWithRedirect, getIdTokenSilently, user } = useAuth0();
+    const { loginWithRedirect, isAuthenticated } = useAuth0(); 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
 
     const handleLanguageChange = (event) => {
+        event.preventDefault(); 
         const selectedLang = event.target.value;
-        changeLanguage(selectedLang); 
+        changeLanguage(selectedLang);
+        localStorage.setItem('selectedLanguage', selectedLang); 
     };
-
-    const sendAuth0TokenToServer = async () => {
-        if (isAuthenticated) {
-            try {
-                const token = await getIdTokenSilently();
-                await axios.post(
-                    'http://localhost:8080/',
-                    { user: user.name, email: user.email },
-                    {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            Authorization: `Bearer ${token}`
-                        }
-                    }
-                );
-            } catch (error) {
-                console.error('Ошибка отправки токена на сервер', error);
-            }
-        }
-    };
-
+    
     useEffect(() => {
-        sendAuth0TokenToServer();
-    }, [isAuthenticated]);
+        const savedLanguage = localStorage.getItem('selectedLanguage');
+        if (savedLanguage) {
+            changeLanguage(savedLanguage);
+        }
+    }, []);
 
+    const handleLogin = (event) => {
+        event.preventDefault(); 
+        loginWithRedirect({
+            prompt: "login",
+        });
+    };
     const handleFormLogin = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post('YOUR_SERVER_URL/auth/login', {
+            const response = await axios.post('10.160.17.210:8080', {
                 email,
                 password
+            }, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
             });
 
             const { token } = response.data;
@@ -90,6 +85,13 @@ function Main() {
         }
     };
 
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate('/profil');
+        }
+    }, [isAuthenticated, navigate]); 
+
     return (
         <div className='backM'>
             <div className="containerMainM">
@@ -100,30 +102,15 @@ function Main() {
                             {langArr["login-title-registrationM passiveM"][language]}
                         </h2>
                     </div>
-                    <form onSubmit={handleFormLogin}>
+                    <form  onSubmit={handleFormLogin}>
                         <div className="input-groupM">
                             <label htmlFor="email" className='lgn-email'>{langArr["lgn-email"][language]}</label>
-                            <input 
-                                type="email" 
-                                id="email" 
-                                name="email" 
-                                value={email} 
-                                onChange={(e) => setEmail(e.target.value)} 
-                                required 
-                            />
+                            <input type="email" id="email" name="email" required />
                         </div>
                         <div className="input-groupM">
                             <label htmlFor="password" className='pass'>{langArr["pass"][language]}</label>
-                            <input 
-                                type="password" 
-                                id="password" 
-                                name="password" 
-                                value={password} 
-                                onChange={(e) => setPassword(e.target.value)} 
-                                required 
-                            />
+                            <input type="password" id="password" name="password" required />
                         </div>
-                        {error && <p className="error">{error}</p>}
                         <div className="inPutM">
                             <button type="submit" className="login-btnM">
                                 {langArr["login-btnM"][language]}
@@ -133,7 +120,7 @@ function Main() {
                     <div className="social-loginM">
                         <p>{langArr["social-loginM"][language]}</p>
                         <div className="social-iconsM">
-                            <button type="button" className="google" onClick={() => loginWithRedirect()}>
+                            <button type="button" className="google" onClick={handleLogin}>
                                 <img src={google} alt="Google Login" />
                             </button>
                             <div className="facebook">
