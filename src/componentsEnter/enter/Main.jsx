@@ -8,6 +8,9 @@ import { LanguageContext } from './../../lang';
 import './Main.css';
 import { useAuth0 } from "@auth0/auth0-react";
 
+import UserControllerApi from "../../api/UserControllerApi"
+import ApiClient from '../../ApiClient';
+
 const langArr = {
     "login-title-enterM activeM": {
         "ru": "Вход",
@@ -57,40 +60,35 @@ function Main() {
         }
     }, []);
 
-    const handleLogin = (event) => {
-        event.preventDefault(); 
-        loginWithRedirect({
-            prompt: "login",
-        });
-    };
-    const handleFormLogin = async (event) => {
-        event.preventDefault();
+    const apiclient = new ApiClient();
+    const userControllerApi = new UserControllerApi(apiclient);
+
+    const handleFormLogin = async (e) => {
+        e.preventDefault();
+
+        const body = {
+            password: password,
+            username: email,
+        };
+
         try {
-            const response = await axios.post('10.160.17.210:8080', {
-                email,
-                password
-            }, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
+            userControllerApi.signIn(body, (error, data, response) => {
+                if (error) {
+                    console.error("Ошибка аутентификации:", error);
+                    setError('Ошибка аутентификации. Проверьте email и пароль.');
+                } else {
+                    console.log("Успешный вход:", data);
+                    localStorage.setItem('jwtToken', data.token);
+                    apiclient.setJWTToken(data.token);
+                    navigate('/profil');
                 }
             });
-
-            const { token } = response.data;
-            localStorage.setItem('jwt_token', token); 
-
-            navigate('/profil');
         } catch (err) {
-            console.error("Ошибка аутентификации:", err);
-            setError('Ошибка аутентификации. Проверьте email и пароль.');
+            console.error("Ошибка:", err);
+            setError("Не удалось войти. Попробуйте снова.");
         }
     };
 
-
-    useEffect(() => {
-        if (isAuthenticated) {
-            navigate('/profil');
-        }
-    }, [isAuthenticated, navigate]); 
 
     return (
         <div className='backM'>
@@ -105,11 +103,13 @@ function Main() {
                     <form  onSubmit={handleFormLogin}>
                         <div className="input-groupM">
                             <label htmlFor="email" className='lgn-email'>{langArr["lgn-email"][language]}</label>
-                            <input type="email" id="email" name="email" required />
+                            <input type="email" id="email" name="email" value={email}
+                                onChange={(e) => setEmail(e.target.value)} required />
                         </div>
                         <div className="input-groupM">
                             <label htmlFor="password" className='pass'>{langArr["pass"][language]}</label>
-                            <input type="password" id="password" name="password" required />
+                            <input type="password" id="password" name="password"  value={password}
+                                onChange={(e) => setPassword(e.target.value)} required />
                         </div>
                         <div className="inPutM">
                             <button type="submit" className="login-btnM">
@@ -120,7 +120,7 @@ function Main() {
                     <div className="social-loginM">
                         <p>{langArr["social-loginM"][language]}</p>
                         <div className="social-iconsM">
-                            <button type="button" className="google" onClick={handleLogin}>
+                            <button type="button" className="google">
                                 <img src={google} alt="Google Login" />
                             </button>
                             <div className="facebook">

@@ -7,6 +7,8 @@ import { LanguageContext } from './../../lang';
 import './MainReg.css';
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from 'axios';
+import UserControllerApi from "../../api/UserControllerApi"
+import ApiClient from '../../ApiClient';
 
 const langArr = {
     "login-title-enter active": {
@@ -47,45 +49,37 @@ function MainReg() {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
+    const apiclient = new ApiClient();
+    const userControllerApi = new UserControllerApi(apiclient);
 
-
-    const sendTokenToServer = async (token) => {
-        try {
-            const response = await axios.post('http://10.160.44.249:8080/users',
-                {},
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-        } catch (err) {
-            console.error('Ошибка:', err);
-        }
-    };
 
     const handleFormRegister = async (e) => {
         e.preventDefault();
-    
         if (password !== confirmPassword) {
             setError("Пароли не совпадают");
             return;
         }
     
+        const body = {
+            username: email,
+            password: password,
+            role: "USER",
+        };
+    
         try {
-            const response = await axios.post('http://10.160.44.249:8080/users/sign-up', {
-                username: email,
-                password: password,
-                role: "USER",
+            userControllerApi.signUp(body, (error, data, response) => {
+                if (error) {
+                    console.error("Ошибкап", error);
+                    setError("Не удалось");
+                } else {
+                    console.log("cool:", data);
+                    localStorage.setItem('jwtToken', data.token);
+                    apiclient.setJWTToken(data.token);
+                    navigate('/profil');
+                }
             });
-    
-            const token = response.token;
-            console.log("Получен токен:", token);
-            localStorage.setItem('jwtToken', token);
-            navigate('/profil'); 
-    
         } catch (err) {
-            console.error("Ошибка при регистрации:", err);
+            console.error("Ошибка:", err);
             setError("Не удалось зарегистрироваться. Попробуйте снова.");
         }
     };
@@ -94,31 +88,11 @@ function MainReg() {
 
     const handleGoogleSignup = async () => {
         try {
-            console.log('дорвааа');
             await loginWithRedirect();
         } catch (err) {
             console.error('Error during Google sign-in:', err);
         }
     };
-    
-    
-    useEffect(() => {
-        console.log('isAuthenticated:', isAuthenticated);
-        
-        if (isAuthenticated) {
-            const fetchTokenAndSendToServer = async () => {
-                try {
-                    const token = await getIdTokenSilently();
-                    console.log('Received token:', token);
-                    await sendTokenToServer(token);
-                } catch (err) {
-                    console.error('Error obtaining token:', err);
-                }
-            };
-            fetchTokenAndSendToServer();
-        }
-    }, [isAuthenticated===true, getIdTokenSilently]);
-    
 
     const handleLanguageChange = (event) => {
         event.preventDefault(); 
