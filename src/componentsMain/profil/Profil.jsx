@@ -9,7 +9,9 @@ import backet from './../img/musor.png';
 import dock from './../img/dock.png';
 import logoM from './../img/logo.png';
 import findM from './../img/search.png';
+import chat from './../img/Robot.png';
 import Information from "../information/Information";
+import ChatModal from "../chatModal/chatModal";
 
 const langArrMain = {
     "profile": {
@@ -40,6 +42,7 @@ const langArrMain = {
 
 function Profil() {
     const [modalActive, setModalActive] = useState(false);
+    const [modalActive2, setModalActive2] = useState(false);
     const [documents, setDocuments] = useState([]); 
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedFile, setSelectedFile] = useState(null);
@@ -137,6 +140,12 @@ function Profil() {
                 </div>
             </div>
 
+            <div className="ChatContainer">
+                <button className="chatButton" onClick={() => setModalActive2(true)}>
+                    <img src={chat} alt="Чат" /> 
+                </button>
+            </div>
+
             <div className="logoM">
                 <img src={logoM} alt="Логотип" />
             </div>
@@ -148,6 +157,11 @@ function Profil() {
                 onOpenFile={handleOpenFile}
                 onCopyFile={handleCopyFile}
                 key={language}  
+            />
+
+            <ChatModal
+                active={modalActive2} 
+                setActive={setModalActive2} 
             />
 
         </div>

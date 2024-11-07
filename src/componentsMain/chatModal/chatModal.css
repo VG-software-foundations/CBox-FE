@@ -1,0 +1,123 @@
+.chatModal {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    left: 0;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.5s;
+}
+
+.chatModal.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.chatModalContent {
+    position: absolute; 
+    bottom: 2vh; 
+    left: 1vw; 
+    padding: 20px;
+    border-radius: 12px 12px 12px 30px;
+    background-color: #ffffff;
+    height: 55vh;
+    width: 300px;
+    transition: none;
+    font-size: 30px;
+    color: #9c6035;
+}
+
+.ChatContainerM {
+    position: absolute;
+    left: 9px;
+    bottom: 5px; 
+}
+
+.inputContainer {
+    display: flex;
+    align-items: center;
+    background-color: #FEEFE2; 
+    border-radius: 8px;
+    padding: 10px;
+    position: absolute;
+    min-height: 40px;
+    left: 86px; 
+    bottom: 14px; 
+    max-width: calc(100% - 20px); 
+    width: 210px;
+}
+.messageInput::placeholder {
+    color: #E3C2A8; 
+}
+
+.messageInput {
+    flex: 1;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 0 10px 0;;
+    font-size: 16px;
+    outline: none;
+    margin-right: 10px; 
+    color: #9c6035;
+    resize: none; /* Запрет изменения размера */
+    overflow-y: auto; /* Добавляем прокрутку по вертикали */
+    max-height: 75px;
+}
+
+.clipButton, .sendButton {
+    padding: 18px 0 0 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.clipButton img, .sendButton img {
+    width: 24px;
+    height: 24px;
+}
+.clipButton img {
+    padding: 0 5px 0 0;
+}
+
+.topContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #9c6035; 
+}
+
+.leftContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    flex: 1; 
+    margin-top: -25px; 
+}
+
+.leftContainer img {
+    width: 26px; 
+    height: 26px; 
+    margin-right: 8px; 
+}
+
+.rightContainer {
+    display: flex;
+    align-items: end;
+    margin-top: -5px;
+}
+
+.findChatButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.findChatButton img {
+    width: 24px;
+    height: 24px; 
+}
