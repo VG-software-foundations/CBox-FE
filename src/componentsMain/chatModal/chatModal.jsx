@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import './chatModal.css';
@@ -7,8 +7,15 @@ import clip from './../img/clip.png';
 import findChat from './../img/findChat.png';
 import oflineA from './../img/ofline.png';
 import sendChat from './../img/tg.png';
-
+import { LanguageContext } from './../../lang';
+const langChat = {
+    typing: {
+      ru: 'Введите сообщение',
+      en: 'Type a message'
+    },
+  };
 const ChatModal = ({ active, setActive }) => {
+    const { language } = useContext(LanguageContext);
     const [message, setMessage] = useState('');
     const [containerHeight, setContainerHeight] = useState(40);
     const [publicChats, setPublicChats] = useState([]);
@@ -30,7 +37,7 @@ const ChatModal = ({ active, setActive }) => {
     }, [active, mockMode]);
 
     const connectToChat = () => {
-        const socket = new SockJS('http://localhost:8080/ws');
+        const socket = new SockJS('http://10.160.79.17:8080');
         const client = new Client({
             webSocketFactory: () => socket,
             reconnectDelay: 5000,
@@ -177,7 +184,7 @@ const ChatModal = ({ active, setActive }) => {
                         value={message}
                         onChange={handleChange}
                         onKeyDown={handleKeyDown}
-                        placeholder="Type a message"
+                        placeholder= {langChat.typing[language]}
                         rows={1}
                     />
                     <input
