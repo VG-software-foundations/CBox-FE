@@ -185,7 +185,7 @@ const ToolPanel = () => {
                 </button>
             </div>
 
-            <div className="toolbar__history">
+            {/*<div className="toolbar__history">
                     <button className="tool-panel__item" onClick={(e) => { 
                         e.preventDefault(); 
                         undo(); 
@@ -199,6 +199,7 @@ const ToolPanel = () => {
                         <FaRedo color="#9C6035" size={20}/>
                     </button>
             </div>
+            */}
          </div>
 
         <div className="tool-panel__second-row">

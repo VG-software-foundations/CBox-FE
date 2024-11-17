@@ -105,7 +105,7 @@ function Profil() {
                 <button className="profButton">
                     <img src={icon} alt="Профиль" /> {langArrMain.profile[language]}
                 </button>
-                <button className="downButton" onClick={() => document.getElementById('fileInput').click()}>
+                <button className="downButton" onClick={() => document.getElementById('fileInputProfil').click()}>
                     <img src={download} alt="Загрузить" /> {langArrMain.upload[language]}
                 </button>
                 <button className="addButton" onClick={handleCreateFile}>
@@ -131,7 +131,7 @@ function Profil() {
 
             <div className="findAndScroll">
             <input
-                    id="fileInput"
+                    id="fileInputProfil"
                     type="file"
                     multiple
                     accept=".doc,.docx,.txt"

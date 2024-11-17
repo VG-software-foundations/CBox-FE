@@ -189,12 +189,12 @@ const ChatModal = ({ active, setActive }) => {
                     />
                     <input
                         type="file"
-                        id="fileInput"
+                        id="fileInputChat"
                         className="fileInput"
                         multiple
                         onChange={handleFileChange}
                     />
-                    <button className="clipButton" onClick={() => document.getElementById('fileInput').click()}>
+                    <button className="clipButton" onClick={() => document.getElementById('fileInputChat').click()}>
                         <img src={clip} alt="Attach" />
                     </button>
                     <button className="sendButton" onClick={handleSend}>
