@@ -130,13 +130,15 @@ function Profil() {
             </div>
 
             <div className="findAndScroll">
-                <input
+            <input
                     id="fileInput"
                     type="file"
                     multiple
+                    accept=".doc,.docx,.txt"
                     style={{ display: 'none' }}
                     onChange={handleFileUpload}
                 />
+
                 <div className="flexContainer">
                     {filteredDocuments.map((file, index) => (
                         <div
