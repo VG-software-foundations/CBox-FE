@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LanguageContext } from './../../lang';
 import './Profil.css';
@@ -50,7 +50,36 @@ function Profil() {
     const [selectedFile, setSelectedFile] = useState(null);
     const [fileCounter, setFileCounter] = useState(1);
     const { language } = useContext(LanguageContext);
+    const [sidebarVisible, setSidebarVisible] = useState(false);
+
+    const sidebarRef = useRef(null); 
+
+    const toggleSidebar = () => {
+        setSidebarVisible(prevState => !prevState); 
+    };
+
     const navigate = useNavigate();
+    
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth > 768 && sidebarVisible) {
+                setSidebarVisible(false); 
+            }
+        };
+        window.addEventListener('resize', handleResize);
+
+        const handleClickOutside = (event) => {
+            if (sidebarVisible && sidebarRef.current && !sidebarRef.current.contains(event.target) && !event.target.closest('.toggleButton')) {
+                setSidebarVisible(false); 
+            }
+        };
+        document.addEventListener('click', handleClickOutside);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, [sidebarVisible]);
 
     const handleFileUpload = (event) => {
         const files = Array.from(event.target.files);
@@ -101,7 +130,14 @@ function Profil() {
 
     return (
         <div className="profil">
-            <div className="containerProfil">
+            <button 
+                className="toggleButton"
+                onClick={toggleSidebar}
+            >
+                <span>☰</span>
+            </button>
+
+            <div ref={sidebarRef} className={`containerProfil ${sidebarVisible ? 'show' : ''}`}>
                 <button className="profButton">
                     <img src={icon} alt="Профиль" /> {langArrMain.profile[language]}
                 </button>
@@ -130,7 +166,7 @@ function Profil() {
             </div>
 
             <div className="findAndScroll">
-            <input
+                <input
                     id="fileInputProfil"
                     type="file"
                     multiple
