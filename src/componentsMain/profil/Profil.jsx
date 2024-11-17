@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LanguageContext } from './../../lang' 
+import { LanguageContext } from './../../lang';
 import './Profil.css';
 import icon from './../img/Victor2.png';
 import download from './../img/download.png';
@@ -11,43 +11,45 @@ import logoM from './../img/logo.png';
 import findM from './../img/search.png';
 import chat from './../img/Robot.png';
 import Information from "../information/Information";
+import RenameModal from "../renameModal/RenameModal";
 import ChatModal from "../chatModal/chatModal";
 
 const langArrMain = {
-    "profile": {
-        "ru": "Профиль",
-        "en": "Profile",
+    profile: {
+        ru: "Профиль",
+        en: "Profile",
     },
-    "upload": {
-        "ru": "Загрузить",
-        "en": "Upload",
+    upload: {
+        ru: "Загрузить",
+        en: "Upload",
     },
-    "create": {
-        "ru": "Создать",
-        "en": "Create",
+    create: {
+        ru: "Создать",
+        en: "Create",
     },
-    "trash": {
-        "ru": "Корзина",
-        "en": "Trash",
+    trash: {
+        ru: "Корзина",
+        en: "Trash",
     },
-    "searchPlaceholder": {
-        "ru": "Найти документы...",
-        "en": "Find documents...",
+    searchPlaceholder: {
+        ru: "Найти документы...",
+        en: "Find documents...",
     },
-    "newDocument": {
-        "ru": "Новый документ",
-        "en": "New Document",
+    newDocument: {
+        ru: "Новый документ",
+        en: "New Document",
     },
 };
 
 function Profil() {
     const [modalActive, setModalActive] = useState(false);
+    const [renameModalActive, setRenameModalActive] = useState(false);
     const [modalActive2, setModalActive2] = useState(false);
-    const [documents, setDocuments] = useState([]); 
+    const [documents, setDocuments] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedFile, setSelectedFile] = useState(null);
     const [fileCounter, setFileCounter] = useState(1);
-    const { language, changeLanguage } = useContext(LanguageContext); 
+    const { language } = useContext(LanguageContext);
     const navigate = useNavigate();
 
     const handleFileUpload = (event) => {
@@ -57,7 +59,7 @@ function Profil() {
 
     const handleCreateFile = () => {
         const newFile = {
-            name: `${langArrMain["newDocument"][language]} ${fileCounter}`,
+            name: `${langArrMain.newDocument[language]} ${fileCounter}`,
             type: 'text/plain',
         };
         setDocuments((prevDocs) => [...prevDocs, newFile]);
@@ -84,24 +86,33 @@ function Profil() {
         setModalActive(false);
     };
 
-    const filteredDocuments = documents.filter((file) =>
-        file.name.toLowerCase().includes(searchTerm.toLowerCase())
+    const handleRenameFile = (file, newName) => {
+        setDocuments((prevDocs) =>
+            prevDocs.map((doc) =>
+                doc === file ? { ...doc, name: newName } : doc
+            )
+        );
+        setRenameModalActive(false);
+    };
+
+    const filteredDocuments = (documents || []).filter((file) =>
+        file?.name?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     return (
         <div className="profil">
             <div className="containerProfil">
                 <button className="profButton">
-                    <img src={icon} alt="Профиль" /> {langArrMain["profile"][language]}
+                    <img src={icon} alt="Профиль" /> {langArrMain.profile[language]}
                 </button>
                 <button className="downButton" onClick={() => document.getElementById('fileInput').click()}>
-                    <img src={download} alt="Загрузить" /> {langArrMain["upload"][language]}
+                    <img src={download} alt="Загрузить" /> {langArrMain.upload[language]}
                 </button>
                 <button className="addButton" onClick={handleCreateFile}>
-                    <img src={add} alt="Создать" /> {langArrMain["create"][language]}
+                    <img src={add} alt="Создать" /> {langArrMain.create[language]}
                 </button>
                 <button className="backetButton">
-                    <img src={backet} alt="Корзина" /> {langArrMain["trash"][language]}
+                    <img src={backet} alt="Корзина" /> {langArrMain.trash[language]}
                 </button>
             </div>
 
@@ -109,7 +120,7 @@ function Profil() {
                 <input
                     type="text"
                     className="searchInput"
-                    placeholder={langArrMain["searchPlaceholder"][language]}
+                    placeholder={langArrMain.searchPlaceholder[language]}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -128,9 +139,9 @@ function Profil() {
                 />
                 <div className="flexContainer">
                     {filteredDocuments.map((file, index) => (
-                        <div 
-                            key={index} 
-                            className="card" 
+                        <div
+                            key={index}
+                            className="card"
                             onContextMenu={(e) => handleFileRightClick(e, file)}
                         >
                             <img src={dock} alt="Иконка" style={{ width: '204px', height: '204px' }} />
@@ -142,7 +153,7 @@ function Profil() {
 
             <div className="ChatContainer">
                 <button className="chatButton" onClick={() => setModalActive2(true)}>
-                    <img src={chat} alt="Чат" /> 
+                    <img src={chat} alt="Чат" />
                 </button>
             </div>
 
@@ -150,20 +161,27 @@ function Profil() {
                 <img src={logoM} alt="Логотип" />
             </div>
 
-            <Information 
-                active={modalActive} 
-                setActive={setModalActive} 
-                file={selectedFile} 
+            <Information
+                active={modalActive}
+                setActive={setModalActive}
+                file={selectedFile}
                 onOpenFile={handleOpenFile}
                 onCopyFile={handleCopyFile}
-                key={language}  
+                onRenameFile={() => setRenameModalActive(true)}
+                key={language}
+            />
+
+            <RenameModal
+                active={renameModalActive}
+                setActive={setRenameModalActive}
+                file={selectedFile}
+                onRenameFile={handleRenameFile}
             />
 
             <ChatModal
-                active={modalActive2} 
-                setActive={setModalActive2} 
+                active={modalActive2}
+                setActive={setModalActive2}
             />
-
         </div>
     );
 }

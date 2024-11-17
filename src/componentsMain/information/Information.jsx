@@ -24,14 +24,15 @@ const langArrModalInformationMain = {
     ru: 'Сделать копию',
     en: 'Copy'
   },
-  del:{
+  del: {
     ru: 'Удалить',
     en: 'Delete'
   },
 };
 
-const Information = ({ active, setActive, file, onOpenFile, onCopyFile }) => {
+const Information = ({ active, setActive, file, onOpenFile, onCopyFile, onRenameFile }) => {
   const { language } = useContext(LanguageContext);
+
   return (
     <div className={active ? "modalInf active" : "modalInf"} onClick={() => setActive(false)}>
       <div className={active ? "modalInfContant active" : "modalInfContant"} onClick={e => e.stopPropagation()}>
@@ -44,7 +45,7 @@ const Information = ({ active, setActive, file, onOpenFile, onCopyFile }) => {
           <button className="inButton">
             <img src={inComp} alt="Скачать" /> <span>{langArrModalInformationMain.save[language]}</span>
           </button>
-          <button className="renameButton">
+          <button className="renameButton" onClick={() => onRenameFile(file)}>
             <img src={renameImg} alt="Переименовать" /><span>{langArrModalInformationMain.rename[language]}</span>
           </button>
           <button className="copyButton" onClick={() => onCopyFile(file)}>
@@ -57,6 +58,6 @@ const Information = ({ active, setActive, file, onOpenFile, onCopyFile }) => {
       </div>
     </div>
   );
-}
+};
 
 export default Information;
