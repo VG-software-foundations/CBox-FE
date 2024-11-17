@@ -40,6 +40,10 @@ const CUSTOM_BLOCK_RENDER_MAP = Immutable.Map({
     element: "div",
     wrapper: <div style={{ textAlign: "right" }} />,
   },
+  [BlockType.list]: {
+    element: "li",
+    wrapper: <ul/>,
+  },
 });
 
 export const BLOCK_RENDER_MAP = DefaultDraftBlockRenderMap.merge(

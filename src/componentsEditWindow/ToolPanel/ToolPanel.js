@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect  } from "react";
 import { useEditorApi } from "./../TextEditor/context";
 import classNames from "classnames";
 import { AlignmentType, BlockType, InlineStyle } from "../TextEditor/config";
@@ -55,14 +55,17 @@ const ToolPanel = () => {
         hasInlineStyle,
         undo,
         redo,
-        //setTextColor,
+        setTextColor,
+        onChange,
     } = useEditorApi();
 
     const [selectedColor, setSelectedColor] = useState("black"); 
-    const { language } = useContext(LanguageContext);
+    const { language, changeLanguage  } = useContext(LanguageContext);
+     const [fontFamilyOpen, setFontFamilyOpen] = useState(false);
+  const [colorPickerOpen, setColorPickerOpen] = useState(false);
     const handleColorChange = (color) => {
         setSelectedColor(color);
-        //setTextColor(color);
+        setTextColor(color); // Применяем цвет к тексту
     };
 
     const handleAlignmentChange = (alignmentType) => {
@@ -71,6 +74,12 @@ const ToolPanel = () => {
       
     const navigate = useNavigate();
     const [modalActive, setModalActive] = useState(false);
+    useEffect(() => {
+        const savedLanguage = localStorage.getItem('selectedLanguage');
+        if (savedLanguage) {
+            changeLanguage(savedLanguage);
+        }
+    }, []);
     return (
         <div className="tool-panel">
             <header className="tool-panel__header">
@@ -85,7 +94,7 @@ const ToolPanel = () => {
                      </div>
                     </button>
                     <button className="tool-panel__icon-button">
-                    <img src={profil} onClick={() => navigate('/')}></img>
+                    <img src={profil} onClick={() => navigate('/profil')}></img>
                     </button>
                 </div>
             </header>
@@ -177,10 +186,16 @@ const ToolPanel = () => {
             </div>
 
             <div className="toolbar__history">
-                    <button className="tool-panel__item" onClick={undo}>
+                    <button className="tool-panel__item" onClick={(e) => { 
+                        e.preventDefault(); 
+                        undo(); 
+                        }}>
                         <FaUndo color="#9C6035" size={20}/>
                     </button>
-                    <button className="tool-panel__item" onClick={redo}>
+                    <button className="tool-panel__item" onMouseDown={(e) => { 
+                        e.preventDefault();
+                        redo(); 
+                        }}>
                         <FaRedo color="#9C6035" size={20}/>
                     </button>
             </div>
@@ -207,13 +222,15 @@ const ToolPanel = () => {
                 </button>
 
                 <div className="dropdown">
-                    <button className="tool-panel__item dropbtn"><p className="family">Font Family</p></button>
-                    <div className="dropdown-content">
+                    <button className="tool-panel__item dropbtn" onClick={() => setFontFamilyOpen(prev => !prev)}>
+                        <p className="family">Font Family</p>
+                    </button>
+                    <div className="dropdown-content" style={{ display: fontFamilyOpen ? 'block' : 'none' }}>
                         {toolbarOptions.fontFamily.options.map((font, index) => (
-                            <button key={index} onClick={(e) => { e.preventDefault();  }}>
-                                {font}
-                            </button>
-                        ))}
+                    <button key={index} onClick={(e) => { e.preventDefault(); }}>
+                        {font}
+                    </button>
+                     ))}
                     </div>
                 </div>
 
@@ -241,28 +258,28 @@ const ToolPanel = () => {
                 </div>
 
                 <div className="dropdown">
-                    <button className="tool-panel__item dropbtn">
-                        <FaPalette color="#9C6035" size={20}/>
-                    </button>
-                    <div className="dropdown-content">
-                        {toolbarOptions.colorPicker.colors.map((color, index) => (
-                            <button
-                                key={index}
-                                className="tool-panel__color-item"
-                                style={{
-                                    backgroundColor: color,
-                                    border: 'none', 
-                                    width: '30px',
-                                    height: '30px',
-                                    borderRadius: '4px', 
-                                    margin: '2px',
-                                    cursor: 'pointer' 
-                                }}
-                                onClick={() => handleColorChange(color)}
-                            />
-                        ))}
-                    </div>
-                </div>
+          <button className="tool-panel__item dropbtn" onClick={() => setColorPickerOpen(prev => !prev)}>
+            <FaPalette color="#9C6035" size={20} />
+          </button>
+          <div className="dropdown-content" style={{ display: colorPickerOpen ? 'block' : 'none' }}>
+            {toolbarOptions.colorPicker.colors.map((color, index) => (
+              <button
+                key={index}
+                className="tool-panel__color-item"
+                style={{
+                  backgroundColor: color,
+                  border: 'none',
+                  width: '30px',
+                  height: '30px',
+                  borderRadius: '4px',
+                  margin: '2px',
+                  cursor: 'pointer',
+                }}
+                onClick={() => handleColorChange(color)}
+              />
+            ))}
+          </div>
+        </div>
             </div>
             <ModalAccess
         active={modalActive} 

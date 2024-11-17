@@ -64,15 +64,24 @@ export const useEditor = (html) => {
   const setTextColor = (color) => {
     const selection = state.getSelection();
     const contentState = state.getCurrentContent();
+    
+    // Создаём сущность для цвета текста
     const contentStateWithEntity = contentState.createEntity(
-      "TEXT_COLOR",
-      "MUTABLE",
-      { color }
+        "TEXT_COLOR",
+        "MUTABLE",
+        { color }
     );
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-    const newEditorState = EditorState.set(state, { currentContent: contentStateWithEntity });
-    setState(RichUtils.toggleLink(newEditorState, selection, entityKey));
-  };
+    
+    // Обновляем состояние редактора
+    const newEditorState = EditorState.set(state, {
+        currentContent: contentStateWithEntity,
+    });
+
+    // Применяем сущность к текущему выделению
+    const nextState = RichUtils.toggleLink(newEditorState, selection, entityKey);
+    setState(nextState);
+};
   
 
 
@@ -106,28 +115,103 @@ export const useEditor = (html) => {
     [addEntity]
   );
 
+
+
+
+
+
+
+
+
+
+  const [history, setHistory] = useState({
+    undoStack: [],
+    redoStack: [],
+  });
+
+  const pushToUndoStack = useCallback(() => {
+    setHistory(({ undoStack, redoStack }) => ({
+      undoStack: [...undoStack, state],
+      redoStack: [],
+    }));
+  }, [state]);
+
+  const undo = useCallback(() => {
+    setHistory(({ undoStack, redoStack }) => {
+      if (undoStack.length === 0) return { undoStack, redoStack };
+
+      const previousState = undoStack[undoStack.length - 1];
+      return {
+        undoStack: undoStack.slice(0, undoStack.length - 1),
+        redoStack: [state, ...redoStack],
+      };
+    });
+
+    setState((current) => history.undoStack[history.undoStack.length - 1] || current);
+  }, [state, history]);
+
+  const redo = useCallback(() => {
+    setHistory(({ undoStack, redoStack }) => {
+      if (redoStack.length === 0) return { undoStack, redoStack };
+
+      const nextState = redoStack[0];
+      return {
+        undoStack: [...undoStack, state],
+        redoStack: redoStack.slice(1),
+      };
+    });
+
+    setState((current) => history.redoStack[0] || current);
+  }, [state, history]);
+
+  // Hook для обновления стека истории при каждом изменении редактора
+  const onChange = useCallback(
+    (newState) => {
+      pushToUndoStack();
+      setState(newState);
+    },
+    [pushToUndoStack]
+  );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   const handleKeyCommand = useCallback(
     (command, editorState) => {
-      if (command === "accent") {
-        toggleInlineStyle(InlineStyle.ACCENT);
+      if (command === "undo") {
+        undo(); // Вызовите undo
+        return "handled";
+      } else if (command === "redo") {
+        redo(); // Вызовите redo
         return "handled";
       }
-
+  
       const newState = RichUtils.handleKeyCommand(editorState, command);
-
+  
       if (newState) {
         setState(newState);
         return "handled";
       }
-
+  
       return "not-handled";
     },
-    [toggleInlineStyle]
+    [undo, redo, setState]
   );
 
   const handlerKeyBinding = useCallback((e) => {
-    if (e.keyCode === 81 && KeyBindingUtil.hasCommandModifier(e)) {
-      return "accent";
+    if (e.keyCode === 90 && KeyBindingUtil.hasCommandModifier(e)) {
+      return e.shiftKey ? "redo" : "undo"; // Ctrl+Shift+Z -> redo, Ctrl+Z -> undo
     }
     return getDefaultKeyBinding(e);
   }, []);
@@ -140,10 +224,22 @@ export const useEditor = (html) => {
 
 
 
+
+
+
+
+
+
+  
+
+
+
+
+
   return useMemo(
     () => ({
       state,
-      onChange: setState,
+      onChange,
       toggleBlockType,
       currentBlockType,
       toggleInlineStyle,
@@ -154,9 +250,12 @@ export const useEditor = (html) => {
       setTextColor,
       handleKeyCommand,
       handlerKeyBinding,
+      undo,
+      redo,
     }),
     [
       state,
+      onChange,
       toggleBlockType,
       currentBlockType,
       toggleInlineStyle,
@@ -167,6 +266,8 @@ export const useEditor = (html) => {
       setTextColor,
       handleKeyCommand,
       handlerKeyBinding,
+      undo,
+      redo,
     ]
   );
 };

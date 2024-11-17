@@ -4,9 +4,9 @@ import { CUSTOM_STYLE_MAP, BlockType, EntityType, InlineStyle, AlignmentType } f
 export const stateToHTML = convertToHTML({
   styleToHTML: (style) => {
     if (style.startsWith(InlineStyle.TEXT_COLOR)) {
-      const color = style.split('-')[1]; // Извлекаем цвет из стиля
+      const color = style.split('-')[1]; // Извлечение цвета
       return <span style={{ color: color }} />;
-    }
+  }
     switch (style) {
       case InlineStyle.BOLD:
         return <strong />;
@@ -22,23 +22,28 @@ export const stateToHTML = convertToHTML({
   },
 
   blockToHTML: (block) => {
-    switch (block.type) {
-      case BlockType.orderList:
-        return { element: <ol />, nest: <li /> };
-      case BlockType.list:
-        return { element: <ul />, nest: <li /> };
-      case BlockType.alignmentLeft:
-        return <div style={{ textAlign: "left" }} />;
-      case BlockType.alignmentCenter:
-        return <div style={{ textAlign: "center" }} />;
-      case BlockType.alignmentRight:
-        return <div style={{ textAlign: "right" }} />;
-      case BlockType.default:
-        return <p />;
-      default:
-        return null;
-    }
-  },
+  switch (block.type) {
+    case BlockType.orderList:
+      return { element: <ol />, nest: <li /> };
+    case BlockType.list:
+      return {
+        element: <ul />,
+        nest: <li style={{ listStyleType: "disc" }} />, // Применяем стиль к <li>
+      };
+    case BlockType.alignmentLeft:
+      return <div style={{ textAlign: "left" }} />;
+    case BlockType.alignmentCenter:
+      return <div style={{ textAlign: "center" }} />;
+    case BlockType.alignmentRight:
+      return <div style={{ textAlign: "right" }} />;
+    case BlockType.default:
+      return <p />;
+    default:
+      return null;
+  }
+},
+
+  
 
   entityToHTML: (entity, originalText) => {
     if (entity.type === EntityType.link) {
@@ -63,8 +68,8 @@ export const HTMLtoState = convertFromHTML({
       return currentStyle.add(InlineStyle.STRIKETHROUGH);
     }
     if (nodeName === "span" && node.style.color) {
-      return currentStyle.add(`${InlineStyle.TEXT_COLOR}-${node.style.color}`); // Добавляем цвет как часть названия стиля
-    }
+      return currentStyle.add(`${InlineStyle.TEXT_COLOR}-${node.style.color}`);
+  }
     return currentStyle;
   },
   
