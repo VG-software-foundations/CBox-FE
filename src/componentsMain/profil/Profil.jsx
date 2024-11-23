@@ -51,6 +51,8 @@ function Profil() {
     const [fileCounter, setFileCounter] = useState(1);
     const { language } = useContext(LanguageContext);
     const [sidebarVisible, setSidebarVisible] = useState(false);
+    const [fileContent, setFileContent] = useState(null);
+    const [fileContentModalActive, setFileContentModalActive] = useState(false); // Новое состояние
 
     const sidebarRef = useRef(null); 
 
@@ -103,7 +105,24 @@ function Profil() {
     };
 
     const handleOpenFile = (file) => {
-        navigate(`/editor?fileName=${file.name}`);
+        const reader = new FileReader();
+    
+        reader.onload = (e) => {
+            const fileContent = e.target.result; 
+            navigate(`/editor?fileContent=${encodeURIComponent(fileContent)}`);
+        };
+    
+        reader.onerror = (error) => {
+            console.error("Ошибка при чтении файла: ", error);
+        };
+    
+        reader.readAsText(file); 
+    };
+    
+
+    const handleCloseContentModal = () => {
+        setFileContent(null);
+        setFileContentModalActive(false);
     };
 
     const handleCopyFile = (file) => {
@@ -206,7 +225,6 @@ function Profil() {
                 onOpenFile={handleOpenFile}
                 onCopyFile={handleCopyFile}
                 onRenameFile={() => setRenameModalActive(true)}
-                key={language}
             />
 
             <RenameModal
@@ -220,6 +238,18 @@ function Profil() {
                 active={modalActive2}
                 setActive={setModalActive2}
             />
+
+            {fileContentModalActive && (
+                <div className="fileContentModal">
+                    <div className="fileContentModalContent">
+                        <h2>{selectedFile?.name}</h2>
+                        <pre style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>
+                            {fileContent}
+                        </pre>
+                        <button onClick={handleCloseContentModal}>Закрыть</button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
