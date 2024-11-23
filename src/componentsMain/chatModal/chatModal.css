@@ -173,7 +173,6 @@
 }
 
 .message .text {
-    background-color: #fee0d2;
     padding: 8px;
     border-radius: 5px;
     color: #9c6035;
@@ -182,18 +181,11 @@
     word-break: break-word;
 }
 
-.message.self .text {
-    background-color: #FEEFE2;
-}
 
 .messageContent {
-    display: flex;
-    flex-direction: column;
-    background-color: #fee0d2;
+    display: inline-block; /* Позволяет адаптировать ширину к содержимому */
     padding: 8px;
     border-radius: 5px;
-    color: #5c3b24;
-    max-width: 250px; 
     position: relative;
     padding-bottom: 16px;
     width: auto; 
@@ -201,21 +193,23 @@
 
 .message.self .messageContent {
     background-color: #FEEFE2;
-}
-
-.message .text {
-    background-color: #fee0d2;
-    padding: 8px;
-    border-radius: 5px;
-    color: #9c6035;
-    word-wrap: break-word;
-    display: inline-block; 
+    width: auto;
     max-width: 250px; 
-    white-space: pre-wrap; 
-    word-wrap: break-word;
 }
 
+.message.other .messageContent {
+    background-color: #F4AE7F;
+}
 
+.message.self .text {
+    background-color: #FEEFE2;
+    color: #9C6035;
+}
+
+.message.other .text {
+    background-color: #F4AE7F;
+    color: white;
+}
 
 .messageContent .timestamp {
     position: absolute;
