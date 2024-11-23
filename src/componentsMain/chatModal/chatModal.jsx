@@ -1,4 +1,6 @@
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef, useContext, useEffect } from 'react';
+import SockJS from 'sockjs-client';
+import { Client } from '@stomp/stompjs';
 import './chatModal.css';
 import chat from './../img/Robot.png';
 import clip from './../img/clip.png';
@@ -23,13 +25,52 @@ const ChatModal = ({ active, setActive }) => {
     const [message, setMessage] = useState('');
     const [publicChats, setPublicChats] = useState([]);
     const [isConnected, setIsConnected] = useState(false);
-    const [mockMode, setMockMode] = useState(true);
+    const [mockMode, setMockMode] = useState(false);
+    const [userData, setUserData] = useState({
+        username: 'CBox',
+        message: ''
+    });
     const [attachments, setAttachments] = useState([]);
     const textareaRef = useRef(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [highlightedMessages, setHighlightedMessages] = useState([]);
     const [currentHighlightIndex, setCurrentHighlightIndex] = useState(0);
     const messageRefs = useRef([]);
+
+    const stompClientRef = useRef(null);
+    useEffect(() => {
+        if (active && !mockMode) connectToChat();
+        return () => {
+            if (stompClientRef.current) stompClientRef.current.deactivate();
+        };
+    }, [active, mockMode]);
+    const connectToChat = () => {
+        const socket = new SockJS('http://10.160.79.17:8080');
+        const client = new Client({
+            webSocketFactory: () => socket,
+            reconnectDelay: 5000,
+            onConnect: () => onConnected(client),
+            onStompError: (error) => console.error('STOMP Error', error),
+        });
+        client.activate();
+        stompClientRef.current = client;
+    };
+    const onConnected = (client) => {
+        setIsConnected(true);
+        client.subscribe('/chatroom/public', onMessageReceived);
+        userJoin(client);
+    };
+    const userJoin = (client) => {
+        const joinMessage = { senderName: userData.username, status: 'JOIN' };
+        client.publish({ destination: '/app/message', body: JSON.stringify(joinMessage) });
+    };
+    const onMessageReceived = (message) => {
+        const messageData = JSON.parse(message.body);
+        setPublicChats((prevChats) => [...prevChats, messageData]);
+    };
+
+
+
 
     const truncateFileName = (name) => {
         return name.length > 15 ? name.substring(0, 15) + '...' : name;
@@ -70,6 +111,11 @@ const ChatModal = ({ active, setActive }) => {
 
             if (mockMode) {
                 setPublicChats((prevChats) => [...prevChats, chatMessage]);
+            } else if (stompClientRef.current) {
+                stompClientRef.current.publish({
+                    destination: '/app/message',
+                    body: JSON.stringify(chatMessage),
+                });
             }
 
             setMessage('');
@@ -168,7 +214,7 @@ const ChatModal = ({ active, setActive }) => {
                         <div
                             key={index}
                             ref={(el) => (messageRefs.current[index] = el)} 
-                            className={`message ${chat.senderName === 'CBox' ? 'self' : 'other'} ${
+                            className={`message ${chat.senderName === 'CBox' ? 'other' : 'self'} ${
                                 highlightedMessages.includes(index) ? 'highlighted' : ''
                             }`}
                         >
