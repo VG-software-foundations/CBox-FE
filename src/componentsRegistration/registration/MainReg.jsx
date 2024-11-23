@@ -7,9 +7,10 @@ import { LanguageContext } from './../../lang';
 import './MainReg.css';
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from 'axios';
-import UserControllerApi from "../../api/UserControllerApi";
-import ApiClient from '../../ApiClient';
+
 import ModalReg from "../modalReg/ModalReg";
+import UserControllerApi from "../../api/UserControllerApi"
+import ApiClient from '../../ApiClient';
 
 const langArr = {
     "login-title-enter active": {
@@ -40,28 +41,22 @@ const langArr = {
         "ru": "Авторизация через социальные сети",
         "en": "Authorization via social networks",
     },
-    "enter-pin": {
-        "ru": "Введите PIN-код",
-        "en": "Enter PIN Code",
-    },
-    "enter-btn": {
-        "ru": "Войти",
-        "en": "Enter",
-    }
 };
 
 function MainReg() {
     const navigate = useNavigate();
-    const [modalActive, setModalActive] = useState(false);
     const { language, changeLanguage } = useContext(LanguageContext);
-    const { loginWithRedirect } = useAuth0();
+    const { loginWithRedirect, getIdTokenSilently, user, isAuthenticated } = useAuth0();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
+    
+    const [modalActive, setModalActive] = useState(false);
     const [pin, setPin] = useState('');
     const apiclient = new ApiClient();
     const userControllerApi = new UserControllerApi(apiclient);
+
 
     const handleFormRegister = async (e) => {
         e.preventDefault();
@@ -69,21 +64,23 @@ function MainReg() {
             setError("Пароли не совпадают");
             return;
         }
-
+    
         const body = {
             username: email,
             password: password,
             role: "USER",
         };
-
+    
         try {
-            userControllerApi.signUp(body, (error, data) => {
+            userControllerApi.signUp(body, (error, data, response) => {
                 if (error) {
-                    console.error("Ошибка", error);
-                    setError("Не удалось зарегистрироваться");
+                    console.error("Ошибкап", error);
+                    setError("Не удалось");
                 } else {
-                    console.log("Пользователь зарегистрирован:", data);
-                   
+                    console.log("cool:", data);
+                    localStorage.setItem('jwtToken', data.token);
+                    apiclient.setJWTToken(data.token);
+                    setModalActive(true);
                 }
             });
         } catch (err) {
@@ -91,13 +88,12 @@ function MainReg() {
             setError("Не удалось зарегистрироваться. Попробуйте снова.");
         }
     };
-
+    
+    
     const handlePinSubmit = async () => {
         try {
-            const response = await axios.post('/api/verify-pin', { email, pin });
+            const response = await axios.post('/api/verify', { pin });
             if (response.data.success) {
-                localStorage.setItem('jwtToken', response.data.token);
-                apiclient.setJWTToken(response.data.token);
                 navigate('/profil');
             } else {
                 setError("Неверный PIN-код");
@@ -108,21 +104,13 @@ function MainReg() {
         }
     };
 
-    const handleGoogleSignup = async () => {
-        try {
-            await loginWithRedirect();
-        } catch (err) {
-            console.error('Error during Google sign-in:', err);
-        }
-    };
-
     const handleLanguageChange = (event) => {
-        event.preventDefault();
+        event.preventDefault(); 
         const selectedLang = event.target.value;
         changeLanguage(selectedLang);
-        localStorage.setItem('selectedLanguage', selectedLang);
+        localStorage.setItem('selectedLanguage', selectedLang); 
     };
-
+    
     useEffect(() => {
         const savedLanguage = localStorage.getItem('selectedLanguage');
         if (savedLanguage) {
@@ -147,44 +135,44 @@ function MainReg() {
                             <label htmlFor="email" className='lgn-email'>
                                 {langArr["lgn-email"][language]}
                             </label>
-                            <input
-                                type="email"
-                                id="email"
-                                name="email"
+                            <input 
+                                type="email" 
+                                id="email" 
+                                name="email" 
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                required
+                                required 
                             />
                         </div>
                         <div className="input-group">
                             <label htmlFor="password" className='pass'>
                                 {langArr["pass"][language]}
                             </label>
-                            <input
-                                type="password"
-                                id="password"
-                                name="password"
+                            <input 
+                                type="password" 
+                                id="password" 
+                                name="password" 
                                 value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                required
+                                onChange={(e) => setPassword(e.target.value)} 
+                                required 
                             />
                         </div>
                         <div className="input-group">
                             <label htmlFor="confirm-password" className='confirm-pass'>
                                 {langArr["confirm-pass"][language]}
                             </label>
-                            <input
-                                type="password"
-                                id="confirm-password"
-                                name="confirm-password"
+                            <input 
+                                type="password" 
+                                id="confirm-password" 
+                                name="confirm-password" 
                                 value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
-                                required
+                                onChange={(e) => setConfirmPassword(e.target.value)} 
+                                required 
                             />
                         </div>
                         {error && <p className="error">{error}</p>}
                         <div className="inPut">
-                            <button type="submit" className="login-btn" onClick={() => setModalActive(true)}>
+                            <button type="submit" className="login-btn">
                                 {langArr["login-btn"][language]}
                             </button>
                         </div>

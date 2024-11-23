@@ -18,6 +18,14 @@ const langChat = {
         ru: 'Введите сообщение',
         en: 'Type a message'
     },
+    match:{
+        ru: 'Совпадение',
+        en: 'Next match'
+    },
+    search:{
+        ru: 'Поиск по сообщениям...',
+        en: 'Search messages...'
+    },
 };
 
 const ChatModal = ({ active, setActive }) => {
@@ -25,7 +33,7 @@ const ChatModal = ({ active, setActive }) => {
     const [message, setMessage] = useState('');
     const [publicChats, setPublicChats] = useState([]);
     const [isConnected, setIsConnected] = useState(false);
-    const [mockMode, setMockMode] = useState(false);
+    const [mockMode, setMockMode] = useState(true);
     const [userData, setUserData] = useState({
         username: 'CBox',
         message: ''
@@ -184,7 +192,7 @@ const ChatModal = ({ active, setActive }) => {
                     {highlightedMessages.length > 0 && (
                     <div className="navigationButtons">
                         <button className="nextMatchButton" onClick={handleNextMatch}>
-                            Next Match
+                        {langChat.match[language]}
                         </button>
                     </div>
                 )}
@@ -193,7 +201,7 @@ const ChatModal = ({ active, setActive }) => {
                                 type="text"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                placeholder="Search messages..."
+                                placeholder={langChat.search[language]}
                                 className="searchInput"
                             />
                         </div>
@@ -214,7 +222,7 @@ const ChatModal = ({ active, setActive }) => {
                         <div
                             key={index}
                             ref={(el) => (messageRefs.current[index] = el)} 
-                            className={`message ${chat.senderName === 'CBox' ? 'other' : 'self'} ${
+                            className={`message ${chat.senderName === 'CBox' ? 'self' : 'other'} ${
                                 highlightedMessages.includes(index) ? 'highlighted' : ''
                             }`}
                         >
