@@ -8,6 +8,7 @@ import logo from "./../images/logo.png"
 import profil from "./../images/profil.png"
 import planet from "./../images/mdi_planet.png"
 import ModalAccess from "../ModalAccess/modalAccess"
+import LinkModal from "../LinkModal/LinkModal"
 import { LanguageContext } from './../../lang'; 
 
 import { FaPrint, FaBold, FaLink, FaListOl, FaItalic, FaUnderline, FaStrikethrough, FaAlignLeft, FaAlignCenter, FaAlignRight, FaListUl, FaUndo, FaRedo, FaPalette } from 'react-icons/fa';
@@ -48,7 +49,6 @@ const toolbarOptions = {
 const ToolPanel = () => {
     const {
         toHtml,
-        addLink,
         toggleBlockType,
         currentBlockType,
         toggleInlineStyle,
@@ -57,12 +57,15 @@ const ToolPanel = () => {
         redo,
         setTextColor,
         onChange,
+        addLink,
+        addEntity,
     } = useEditorApi();
-
+    const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
     const [selectedColor, setSelectedColor] = useState("black"); 
     const { language, changeLanguage  } = useContext(LanguageContext);
      const [fontFamilyOpen, setFontFamilyOpen] = useState(false);
   const [colorPickerOpen, setColorPickerOpen] = useState(false);
+  
     const handleColorChange = (color) => {
         setSelectedColor(color);
         setTextColor(color); // Применяем цвет к тексту
@@ -185,35 +188,15 @@ const ToolPanel = () => {
                 </button>
             </div>
 
-            {/*<div className="toolbar__history">
-                    <button className="tool-panel__item" onClick={(e) => { 
-                        e.preventDefault(); 
-                        undo(); 
-                        }}>
-                        <FaUndo color="#9C6035" size={20}/>
-                    </button>
-                    <button className="tool-panel__item" onMouseDown={(e) => { 
-                        e.preventDefault();
-                        redo(); 
-                        }}>
-                        <FaRedo color="#9C6035" size={20}/>
-                    </button>
-            </div>
-            */}
          </div>
 
         <div className="tool-panel__second-row">
                 <button
                     className="tool-panel__item"
-                    onClick={() => {
-                        const url = prompt("URL:");
-                        if (url) {
-                            addLink(url);
-                        }
-                    }}>
+                    onClick={() => setIsLinkModalOpen(true)}>
                     <FaLink color="#9C6035" size={20}/>
                 </button>
-                
+        
                 <button
                     className="tool-panel__item"
                     onClick={() => {
@@ -286,6 +269,12 @@ const ToolPanel = () => {
         active={modalActive} 
         setActive={setModalActive} 
       />
+<LinkModal
+              onConfirm={addLink}
+              onClose={() => setIsLinkModalOpen(false)}
+              active={isLinkModalOpen}
+              setActive={setIsLinkModalOpen}
+            />
         </div>
     );
 };

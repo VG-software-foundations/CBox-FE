@@ -11,9 +11,10 @@ import React, { useCallback, useMemo, useState } from "react";
 import Immutable from "immutable";
 import { BlockType, EntityType, InlineStyle, KeyCommand } from "./config";
 import { HTMLtoState, stateToHTML } from "./convert";
-import LinkDecorator from "./Link";
+import linkDecorator from "./Link/index";
+import { Modifier} from "draft-js";
 
-const decorator = new CompositeDecorator([LinkDecorator]);
+const decorator = new CompositeDecorator([linkDecorator]);
 
 export const useEditor = (html) => {
   const [state, setState] = useState(() =>
@@ -85,35 +86,29 @@ export const useEditor = (html) => {
   
 
 
-  const addEntity = useCallback(
-    (entityType, data, mutability) => {
-      setState((currentState) => {
-        const contentState = currentState.getCurrentContent();
-        const contentStateWithEntity = contentState.createEntity(
-          entityType,
-          mutability,
-          data
-        );
-        const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-        const newState = EditorState.set(currentState, {
-          currentContent: contentStateWithEntity,
-        });
-        return RichUtils.toggleLink(
-          newState,
-          newState.getSelection(),
-          entityKey
-        );
-      });
-    },
-    []
-  );
+const addEntity = useCallback((entityType, data, mutability) => {
+  setState((currentState) => {
+    const contentState = currentState.getCurrentContent();
+    const contentStateWithEntity = contentState.createEntity(
+      entityType,
+      mutability,
+      data
+    );
+    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
 
-  const addLink = useCallback(
-    (url) => {
-      addEntity(EntityType.link, { url }, "MUTABLE");
-    },
-    [addEntity]
-  );
+    if (!entityKey) {
+      console.error("Failed to create entity. Entity key is null.");
+      return currentState;
+    }
+
+    const newState = EditorState.set(currentState, {
+      currentContent: contentStateWithEntity,
+    });
+    return RichUtils.toggleLink(newState, newState.getSelection(), entityKey);
+  });
+}, []);
+
+
 
 
 
@@ -139,32 +134,37 @@ export const useEditor = (html) => {
   const undo = useCallback(() => {
     setHistory(({ undoStack, redoStack }) => {
       if (undoStack.length === 0) return { undoStack, redoStack };
-
       const previousState = undoStack[undoStack.length - 1];
       return {
         undoStack: undoStack.slice(0, undoStack.length - 1),
         redoStack: [state, ...redoStack],
       };
     });
-
-    setState((current) => history.undoStack[history.undoStack.length - 1] || current);
+  
+    setState((prevState) => {
+      const newState = history.undoStack[history.undoStack.length - 1];
+      return newState || prevState; 
+    });
   }, [state, history]);
-
+  
   const redo = useCallback(() => {
     setHistory(({ undoStack, redoStack }) => {
       if (redoStack.length === 0) return { undoStack, redoStack };
-
+  
       const nextState = redoStack[0];
+  
       return {
         undoStack: [...undoStack, state],
         redoStack: redoStack.slice(1),
       };
     });
-
-    setState((current) => history.redoStack[0] || current);
+  
+    setState((prevState) => {
+      const newState = history.redoStack[0];
+      return newState || prevState;
+    });
   }, [state, history]);
-
-  // Hook для обновления стека истории при каждом изменении редактора
+  
   const onChange = useCallback(
     (newState) => {
       pushToUndoStack();
@@ -210,9 +210,19 @@ export const useEditor = (html) => {
   );
 
   const handlerKeyBinding = useCallback((e) => {
+    console.log(`Key pressed: ${e.keyCode}`);  // Для отладки
     if (e.keyCode === 90 && KeyBindingUtil.hasCommandModifier(e)) {
-      return e.shiftKey ? "redo" : "undo"; // Ctrl+Shift+Z -> redo, Ctrl+Z -> undo
+      return "undo";
     }
+    // Ctrl+Y -> redo
+    if (e.ctrlKey && e.keyCode === 89) {
+      return "redo";
+    }
+    // Cmd+Shift+Z или Ctrl+Shift+Z -> redo
+    if (e.keyCode === 90 && KeyBindingUtil.hasCommandModifier(e) && e.shiftKey) {
+      return "redo";
+    }
+  
     return getDefaultKeyBinding(e);
   }, []);
 
@@ -227,7 +237,44 @@ export const useEditor = (html) => {
 
 
 
-
+  const addLink = (url) => {
+    if (url && url.length > 0) {
+      setState((currentState) => {
+        const contentState = currentState.getCurrentContent();
+        const selectionState = currentState.getSelection();
+  
+        const contentStateWithEntity = contentState.createEntity(
+          "LINK",
+          "MUTABLE",
+          { url }
+        );
+        const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+  
+        const contentStateWithLink = Modifier.insertText(
+          contentStateWithEntity,
+          selectionState,
+          url,
+          null,
+          entityKey
+        );
+  
+        const newEditorState = EditorState.push(
+          currentState,
+          contentStateWithLink,
+          "insert-characters"
+        );
+  
+        return EditorState.forceSelection(
+          newEditorState,
+          contentStateWithLink.getSelectionAfter()
+        );
+      });
+    } else {
+      alert("Please enter a valid URL.");
+    }
+  };
+  
+  
 
 
   
@@ -240,28 +287,30 @@ export const useEditor = (html) => {
     () => ({
       state,
       onChange,
+      addEntity,
       toggleBlockType,
       currentBlockType,
       toggleInlineStyle,
       hasInlineStyle,
       toHtml,
-      addLink,
       setEntityData,
       setTextColor,
       handleKeyCommand,
       handlerKeyBinding,
       undo,
       redo,
+      addLink,
     }),
     [
       state,
+      addLink,
       onChange,
       toggleBlockType,
       currentBlockType,
       toggleInlineStyle,
       hasInlineStyle,
       toHtml,
-      addLink,
+      addEntity,
       setEntityData,
       setTextColor,
       handleKeyCommand,
