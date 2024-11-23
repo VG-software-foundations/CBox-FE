@@ -167,7 +167,7 @@ function MainReg() {
                             </button>
                         </div>
                     </form>
-                    <div className="social-login">
+                    {/* <div className="social-login">
                         <p>{langArr["social-login"][language]}</p>
                         <div className="social-icons">
                             <button type='button' className="google" onClick={handleGoogleSignup}>
@@ -177,7 +177,7 @@ function MainReg() {
                                 <img src={face} alt="Facebook Login" />
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
             <div className='footerReg'>

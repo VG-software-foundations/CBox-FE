@@ -117,7 +117,7 @@ function Main() {
                             </button>
                         </div>
                     </form>
-                    <div className="social-loginM">
+                    {/* <div className="social-loginM">
                         <p>{langArr["social-loginM"][language]}</p>
                         <div className="social-iconsM">
                             <button type="button" className="google">
@@ -127,7 +127,7 @@ function Main() {
                                 <img src={face} alt="Facebook Login" />
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
             <div className="footer">
