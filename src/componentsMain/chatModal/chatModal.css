@@ -97,14 +97,17 @@
     justify-content: space-between;
     align-items: center;
     border-bottom: 2px solid #9c6035;
-    padding: 10px 0;
+    padding: 40px 0 10px 0;
 }
 
 .leftContainer {
     display: flex;
-    align-items: center;
     justify-content: center;
     flex: 1;
+    position: absolute;
+    top: 10px;
+    left: 105px;
+    
 }
 
 .leftContainer img {
@@ -116,12 +119,16 @@
 .rightContainer {
     display: flex;
     align-items: center;
+    flex-direction: column;
 }
 
 .findChatButton {
     background: none;
     border: none;
     cursor: pointer;
+    position: absolute;
+    top: 38px;
+    right: 13px;
 }
 
 .findChatButton img {
@@ -169,7 +176,7 @@
     background-color: #fee0d2;
     padding: 8px;
     border-radius: 5px;
-    color: #5c3b24;
+    color: #9c6035;
     word-wrap: break-word;
     max-width: 250px;
     word-break: break-word;
@@ -186,19 +193,29 @@
     padding: 8px;
     border-radius: 5px;
     color: #5c3b24;
-    max-width: 250px;
+    max-width: 250px; 
     position: relative;
     padding-bottom: 16px;
+    width: auto; 
 }
 
 .message.self .messageContent {
     background-color: #FEEFE2;
 }
 
-.messageContent .text {
-    margin-bottom: 4px;
-    word-break: break-word;
+.message .text {
+    background-color: #fee0d2;
+    padding: 8px;
+    border-radius: 5px;
+    color: #9c6035;
+    word-wrap: break-word;
+    display: inline-block; 
+    max-width: 250px; 
+    white-space: pre-wrap; 
+    word-wrap: break-word;
 }
+
+
 
 .messageContent .timestamp {
     position: absolute;
@@ -255,10 +272,93 @@
     display: none;
 }
 
+.attachment {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 8px;
+}
+.attachments {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); 
+    gap: 10px; 
+    margin-top: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+
 .attachmentImage {
     width: 40px;
     height: 40px;
     object-fit: cover;
     border-radius: 5px;
-    margin-bottom: 5px;
+}
+
+.attachment span {
+    font-size: 12px;
+    color: #9c6035;
+    margin-top: 5px;
+    text-align: center;
+    word-break: break-word;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 50px; 
+}
+
+.rightContainer  .searchContainer {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    left: 230px;
+    top: 40px;
+}
+
+ .rightContainer .searchInput {
+    flex: none; 
+    width: 240px; 
+    height: 22px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 14px;
+    margin-right: 8px;
+}
+
+
+.rightContainer .searchButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.rightContainer .searchButton img {
+    width: 20px;
+    height: 20px;
+}
+
+.message.highlighted {
+    background-color: #F4AE7F; 
+    border: 1px solid #e16b17;
+    border-radius: 5px;
+}
+
+.nextMatchButton {
+    position: absolute;
+    top: 1px;
+    left: 220px;
+    height: 25px;
+    background-color: #F4AE7F;
+    border: none;
+    padding: 4px 10px;
+    font-size: 10px;
+    color: #ffffff;
+    cursor: pointer;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+
+.nextMatchButton:hover {
+    background-color: #e16b17;
 }
