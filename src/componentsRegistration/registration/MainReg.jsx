@@ -7,8 +7,9 @@ import { LanguageContext } from './../../lang';
 import './MainReg.css';
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from 'axios';
-import UserControllerApi from "../../api/UserControllerApi"
+import UserControllerApi from "../../api/UserControllerApi";
 import ApiClient from '../../ApiClient';
+import ModalReg from "../modalReg/ModalReg";
 
 const langArr = {
     "login-title-enter active": {
@@ -39,19 +40,28 @@ const langArr = {
         "ru": "Авторизация через социальные сети",
         "en": "Authorization via social networks",
     },
+    "enter-pin": {
+        "ru": "Введите PIN-код",
+        "en": "Enter PIN Code",
+    },
+    "enter-btn": {
+        "ru": "Войти",
+        "en": "Enter",
+    }
 };
 
 function MainReg() {
     const navigate = useNavigate();
+    const [modalActive, setModalActive] = useState(false);
     const { language, changeLanguage } = useContext(LanguageContext);
-    const { loginWithRedirect, getIdTokenSilently, user, isAuthenticated } = useAuth0();
+    const { loginWithRedirect } = useAuth0();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
+    const [pin, setPin] = useState('');
     const apiclient = new ApiClient();
     const userControllerApi = new UserControllerApi(apiclient);
-
 
     const handleFormRegister = async (e) => {
         e.preventDefault();
@@ -59,23 +69,21 @@ function MainReg() {
             setError("Пароли не совпадают");
             return;
         }
-    
+
         const body = {
             username: email,
             password: password,
             role: "USER",
         };
-    
+
         try {
-            userControllerApi.signUp(body, (error, data, response) => {
+            userControllerApi.signUp(body, (error, data) => {
                 if (error) {
-                    console.error("Ошибкап", error);
-                    setError("Не удалось");
+                    console.error("Ошибка", error);
+                    setError("Не удалось зарегистрироваться");
                 } else {
-                    console.log("cool:", data);
-                    localStorage.setItem('jwtToken', data.token);
-                    apiclient.setJWTToken(data.token);
-                    navigate('/profil');
+                    console.log("Пользователь зарегистрирован:", data);
+                   
                 }
             });
         } catch (err) {
@@ -83,8 +91,22 @@ function MainReg() {
             setError("Не удалось зарегистрироваться. Попробуйте снова.");
         }
     };
-    
-    
+
+    const handlePinSubmit = async () => {
+        try {
+            const response = await axios.post('/api/verify-pin', { email, pin });
+            if (response.data.success) {
+                localStorage.setItem('jwtToken', response.data.token);
+                apiclient.setJWTToken(response.data.token);
+                navigate('/profil');
+            } else {
+                setError("Неверный PIN-код");
+            }
+        } catch (err) {
+            console.error("Ошибка при проверке PIN-кода:", err);
+            setError("Не удалось подтвердить PIN-код");
+        }
+    };
 
     const handleGoogleSignup = async () => {
         try {
@@ -95,12 +117,12 @@ function MainReg() {
     };
 
     const handleLanguageChange = (event) => {
-        event.preventDefault(); 
+        event.preventDefault();
         const selectedLang = event.target.value;
         changeLanguage(selectedLang);
-        localStorage.setItem('selectedLanguage', selectedLang); 
+        localStorage.setItem('selectedLanguage', selectedLang);
     };
-    
+
     useEffect(() => {
         const savedLanguage = localStorage.getItem('selectedLanguage');
         if (savedLanguage) {
@@ -125,59 +147,48 @@ function MainReg() {
                             <label htmlFor="email" className='lgn-email'>
                                 {langArr["lgn-email"][language]}
                             </label>
-                            <input 
-                                type="email" 
-                                id="email" 
-                                name="email" 
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                required 
+                                required
                             />
                         </div>
                         <div className="input-group">
                             <label htmlFor="password" className='pass'>
                                 {langArr["pass"][language]}
                             </label>
-                            <input 
-                                type="password" 
-                                id="password" 
-                                name="password" 
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
                                 value={password}
-                                onChange={(e) => setPassword(e.target.value)} 
-                                required 
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
                             />
                         </div>
                         <div className="input-group">
                             <label htmlFor="confirm-password" className='confirm-pass'>
                                 {langArr["confirm-pass"][language]}
                             </label>
-                            <input 
-                                type="password" 
-                                id="confirm-password" 
-                                name="confirm-password" 
+                            <input
+                                type="password"
+                                id="confirm-password"
+                                name="confirm-password"
                                 value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)} 
-                                required 
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                required
                             />
                         </div>
                         {error && <p className="error">{error}</p>}
                         <div className="inPut">
-                            <button type="submit" className="login-btn">
+                            <button type="submit" className="login-btn" onClick={() => setModalActive(true)}>
                                 {langArr["login-btn"][language]}
                             </button>
                         </div>
                     </form>
-                    {/* <div className="social-login">
-                        <p>{langArr["social-login"][language]}</p>
-                        <div className="social-icons">
-                            <button type='button' className="google" onClick={handleGoogleSignup}>
-                                <img src={google} alt="Google Login" />
-                            </button>
-                            <div className="facebook">
-                                <img src={face} alt="Facebook Login" />
-                            </div>
-                        </div>
-                    </div> */}
                 </div>
             </div>
             <div className='footerReg'>
@@ -193,6 +204,13 @@ function MainReg() {
                     </div>
                 </div>
             </div>
+            <ModalReg
+                active={modalActive}
+                setActive={setModalActive}
+                pin={pin}
+                setPin={setPin}
+                handlePinSubmit={handlePinSubmit}
+            />
         </div>
     );
 }
