@@ -276,12 +276,13 @@ const addEntity = useCallback((entityType, data, mutability) => {
   
   
 
-
   const toggleFontStyle = (fontStyle) => {
-    setState((currentState) => 
-        RichUtils.toggleInlineStyle(currentState, fontStyle)
-    );
-};
+    const styleKey = `FONT_${fontStyle.toUpperCase()}`;
+    const newState = RichUtils.toggleInlineStyle(state, styleKey);
+    setState(newState);
+  };
+  
+  
 
 
 

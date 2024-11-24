@@ -4,8 +4,8 @@ import { CUSTOM_STYLE_MAP, BlockType, EntityType, InlineStyle, AlignmentType } f
 export const stateToHTML = convertToHTML({
   styleToHTML: (style) => {
     if (style.startsWith("FONT_")) {
-      const font = style.replace("FONT_", "").toLowerCase();
-      return <span style={{ fontFamily: font }} />;
+      const font = style.replace("FONT_", "");  // Убираем префикс FONT_
+      return <span style={{ fontFamily: font }}>{}</span>;
     }
     switch (style) {
       case InlineStyle.BOLD:
@@ -56,8 +56,9 @@ export const stateToHTML = convertToHTML({
 export const HTMLtoState = convertFromHTML({
   htmlToStyle: (nodeName, node, currentStyle) => {
     if (nodeName === "span" && node.style.fontFamily) {
-      const font = node.style.fontFamily.replace(/['"]/g, "").toUpperCase();
-      return currentStyle.add(`FONT_${font}`);
+      const font = node.style.fontFamily.replace(/['"]/g, "");
+      const fontStyle = `FONT_${font.toUpperCase()}`;  // Убедитесь, что используется правильный формат
+      return currentStyle.add(fontStyle);
     }
     if (nodeName === "strong") {
       return currentStyle.add(InlineStyle.BOLD);

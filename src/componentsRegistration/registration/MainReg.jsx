@@ -11,6 +11,7 @@ import axios from 'axios';
 import ModalReg from "../modalReg/ModalReg";
 import UserControllerApi from "../../api/UserControllerApi"
 import ApiClient from '../../ApiClient';
+import VerificationControllerApi from '../../api/VerificationControllerApi';
 
 const langArr = {
     "login-title-enter active": {
@@ -56,7 +57,8 @@ function MainReg() {
     const [pin, setPin] = useState('');
     const apiclient = new ApiClient();
     const userControllerApi = new UserControllerApi(apiclient);
-
+    const verificationControllerApi = new VerificationControllerApi(apiclient);
+    const logControllerApi = new LogControllerApi(apiclient);
 
     const handleFormRegister = async (e) => {
         e.preventDefault();
@@ -72,19 +74,19 @@ function MainReg() {
         };
     
         try {
-            userControllerApi.signUp(body, (error, data, response) => {
+            userControllerApi.signUp(body, (error, data) => {
                 if (error) {
-                    console.error("Ошибкап", error);
+                    logControllerApi.verify1("ERROR REGISTRATION: "+ error);
                     setError("Не удалось");
                 } else {
-                     console.log("cool:", data);
-                    // localStorage.setItem('jwtToken', data.token);
-                    // apiclient.setJWTToken(data.token);
+                    logControllerApi.verify1("COOL: "+ data);
+                    localStorage.setItem('jwtToken', data.token);
+                    apiclient.setJWTToken(data.token);
                     setModalActive(true);
                 }
             });
         } catch (err) {
-            console.error("Ошибка:", err);
+            logControllerApi.verify1("ERROR REGISTRATION: "+ error);
             setError("Не удалось зарегистрироваться. Попробуйте снова.");
         }
     };
@@ -92,14 +94,15 @@ function MainReg() {
     
     const handlePinSubmit = async () => {
         try {
-            const response = await axios.post('/api/verify', { pin });
+            verificationControllerApi.verify(pin,(error, response)=>{
             if (response.data.success) {
                 navigate('/');
             } else {
                 setError("Неверный PIN-код");
             }
+        });
         } catch (err) {
-            console.error("Ошибка при проверке PIN-кода:", err);
+            logControllerApi.verify1("ERROR PIN: "+ err);
             setError("Не удалось подтвердить PIN-код");
         }
     };

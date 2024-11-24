@@ -63,35 +63,35 @@ function Main() {
     const apiclient = new ApiClient();
     const userControllerApi = new UserControllerApi(apiclient);
 
-    // const handleFormLogin = async (e) => {
-    //     e.preventDefault();
-
-    //     const body = {
-    //         password: password,
-    //         username: email,
-    //     };
-
-    //     try {
-    //         userControllerApi.signIn(body, (error, data, response) => {
-    //             if (error) {
-    //                 console.error("Ошибка аутентификации:", error);
-    //                 setError('Ошибка аутентификации. Проверьте email и пароль.');
-    //             } else {
-    //                 console.log("Успешный вход:", data);
-    //                 localStorage.setItem('jwtToken', data.token);
-    //                 apiclient.setJWTToken(data.token);
-    //                 navigate('/profil');
-    //             }
-    //         });
-    //     } catch (err) {
-    //         console.error("Ошибка:", err);
-    //         setError("Не удалось войти. Попробуйте снова.");
-    //     }
-    // };
     const handleFormLogin = async (e) => {
         e.preventDefault();
-        alert('Форма отправлена без реального сервера!');
-      };
+
+        const body = {
+            password: password,
+            username: email,
+        };
+
+        try {
+            userControllerApi.signIn(body, (error, data, response) => {
+                if (error) {
+                    logControllerApi.verify1("ERROR Authentification: "+ err);
+                    setError('Ошибка аутентификации. Проверьте email и пароль.');
+                } else {
+                    logControllerApi.verify1("SUCCESS ENTER: "+ data);
+                    localStorage.setItem('jwtToken', data.token);
+                    apiclient.setJWTToken(data.token);
+                    navigate('/profil');
+                }
+            });
+        } catch (err) {
+            logControllerApi.verify1("ERROR: "+ err);
+            setError("Не удалось войти. Попробуйте снова.");
+        }
+    };
+    // const handleFormLogin = async (e) => {
+    //     e.preventDefault();
+    //     alert('Форма отправлена без реального сервера!');
+    //   };
 
 
     return (
@@ -121,17 +121,6 @@ function Main() {
                             </button>
                         </div>
                     </form>
-                    {/* <div className="social-loginM">
-                        <p>{langArr["social-loginM"][language]}</p>
-                        <div className="social-iconsM">
-                            <button type="button" className="google">
-                                <img src={google} alt="Google Login" />
-                            </button>
-                            <div className="facebook">
-                                <img src={face} alt="Facebook Login" />
-                            </div>
-                        </div>
-                    </div> */}
                 </div>
             </div>
             <div className="footer">
