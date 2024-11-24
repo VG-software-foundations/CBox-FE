@@ -3,10 +3,10 @@ import { CUSTOM_STYLE_MAP, BlockType, EntityType, InlineStyle, AlignmentType } f
 
 export const stateToHTML = convertToHTML({
   styleToHTML: (style) => {
-    if (style.startsWith(InlineStyle.TEXT_COLOR)) {
-      const color = style.split('-')[1]; // Извлечение цвета
-      return <span style={{ color: color }} />;
-  }
+    if (style.startsWith("FONT_")) {
+      const font = style.replace("FONT_", "").toLowerCase();
+      return <span style={{ fontFamily: font }} />;
+    }
     switch (style) {
       case InlineStyle.BOLD:
         return <strong />;
@@ -55,6 +55,10 @@ export const stateToHTML = convertToHTML({
 
 export const HTMLtoState = convertFromHTML({
   htmlToStyle: (nodeName, node, currentStyle) => {
+    if (nodeName === "span" && node.style.fontFamily) {
+      const font = node.style.fontFamily.replace(/['"]/g, "").toUpperCase();
+      return currentStyle.add(`FONT_${font}`);
+    }
     if (nodeName === "strong") {
       return currentStyle.add(InlineStyle.BOLD);
     }

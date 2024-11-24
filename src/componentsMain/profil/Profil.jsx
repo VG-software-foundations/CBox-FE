@@ -13,6 +13,7 @@ import chat from './../img/Robot.png';
 import Information from "../information/Information";
 import RenameModal from "../renameModal/RenameModal";
 import ChatModal from "../chatModal/chatModal";
+import FileControllerApi from './../../api/FileControllerApi';
 
 const langArrMain = {
     profile: {
@@ -52,16 +53,17 @@ function Profil() {
     const { language } = useContext(LanguageContext);
     const [sidebarVisible, setSidebarVisible] = useState(false);
     const [fileContent, setFileContent] = useState(null);
-    const [fileContentModalActive, setFileContentModalActive] = useState(false); // Новое состояние
+    const [fileContentModalActive, setFileContentModalActive] = useState(false);
 
     const sidebarRef = useRef(null); 
+    const fileApi = new FileControllerApi();
 
     const toggleSidebar = () => {
         setSidebarVisible(prevState => !prevState); 
     };
 
     const navigate = useNavigate();
-    
+
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth > 768 && sidebarVisible) {
@@ -77,25 +79,53 @@ function Profil() {
         };
         document.addEventListener('click', handleClickOutside);
 
+        loadDocuments();
+
         return () => {
             window.removeEventListener('resize', handleResize);
             document.removeEventListener('click', handleClickOutside);
         };
     }, [sidebarVisible]);
 
-    const handleFileUpload = (event) => {
-        const files = Array.from(event.target.files);
-        setDocuments((prevDocs) => [...prevDocs, ...files]);
+    const loadDocuments = async () => {
+        try {
+            const response = await fileApi.get({});
+            setDocuments(response.data.content || []);
+        } catch (error) {
+            console.error('Ошибка загрузки документов:', error);
+        }
     };
 
-    const handleCreateFile = () => {
+    const handleFileUpload = async (event) => {
+        const files = Array.from(event.target.files);
+        try {
+            const uploadPromises = files.map(file => {
+                const fileDto = {
+                    name: file.name,
+                    content: file,
+                };
+                return fileApi.upload({ body: fileDto });
+            });
+            await Promise.all(uploadPromises);
+            loadDocuments(); 
+        } catch (error) {
+            console.error('Ошибка загрузки файлов:', error);
+        }
+    };
+
+    const handleCreateFile = async () => {
         const newFile = {
             name: `${langArrMain.newDocument[language]} ${fileCounter}`,
             type: 'text/plain',
         };
-        setDocuments((prevDocs) => [...prevDocs, newFile]);
-        setFileCounter((prevCounter) => prevCounter + 1);
-        navigate('/editor');
+        try {
+            await fileApi.upload({ body: newFile });
+            setFileCounter(prevCounter => prevCounter + 1);
+            loadDocuments();
+            navigate('/editor');
+        } catch (error) {
+            console.error('Ошибка создания файла:', error);
+        }
     };
 
     const handleFileRightClick = (e, file) => {
@@ -104,43 +134,48 @@ function Profil() {
         setModalActive(true);
     };
 
-    const handleOpenFile = (file) => {
-        const reader = new FileReader();
-    
-        reader.onload = (e) => {
-            const fileContent = e.target.result; 
-            navigate(`/editor?fileContent=${encodeURIComponent(fileContent)}`);
-        };
-    
-        reader.onerror = (error) => {
-            console.error("Ошибка при чтении файла: ", error);
-        };
-    
-        reader.readAsText(file); 
-    };
-    
-
-    const handleCloseContentModal = () => {
-        setFileContent(null);
-        setFileContentModalActive(false);
+    const handleOpenFile = async (file) => {
+        try {
+            const response = await fileApi.findById1(file.id);
+            navigate(`/editor?fileContent=${encodeURIComponent(response.data.content)}`);
+        } catch (error) {
+            console.error("Ошибка открытия файла:", error);
+        }
     };
 
-    const handleCopyFile = (file) => {
+    const handleCopyFile = async (file) => {
         const copyFile = {
             name: `${file.name} - Copy`,
             type: file.type,
         };
-        setDocuments((prevDocs) => [...prevDocs, copyFile]);
-        setModalActive(false);
+        try {
+            await fileApi.upload({ body: copyFile });
+            setModalActive(false);
+            loadDocuments();
+        } catch (error) {
+            console.error('Ошибка копирования файла:', error);
+        }
     };
 
-    const handleRenameFile = (file, newName) => {
-        setDocuments((prevDocs) =>
-            prevDocs.map((doc) =>
-                doc === file ? { ...doc, name: newName } : doc
-            )
-        );
-        setRenameModalActive(false);
+    const handleRenameFile = async (file, newName) => {
+        const updatedFile = { ...file, name: newName };
+        try {
+            await fileApi.update1(updatedFile);
+            setRenameModalActive(false);
+            loadDocuments();
+        } catch (error) {
+            console.error('Ошибка переименования файла:', error);
+        }
+    };
+
+    const handleDeleteFile = async (file) => {
+        try {
+            await fileApi.delete1(file.id);
+            setModalActive(false);
+            loadDocuments();
+        } catch (error) {
+            console.error('Ошибка удаления файла:', error);
+        }
     };
 
     const filteredDocuments = (documents || []).filter((file) =>
@@ -239,17 +274,6 @@ function Profil() {
                 setActive={setModalActive2}
             />
 
-            {fileContentModalActive && (
-                <div className="fileContentModal">
-                    <div className="fileContentModalContent">
-                        <h2>{selectedFile?.name}</h2>
-                        <pre style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>
-                            {fileContent}
-                        </pre>
-                        <button onClick={handleCloseContentModal}>Закрыть</button>
-                    </div>
-                </div>
-            )}
         </div>
     );
 }

@@ -56,6 +56,7 @@ const ToolPanel = () => {
         undo,
         redo,
         setTextColor,
+        toggleFontStyle,
         onChange,
         addLink,
         addEntity,

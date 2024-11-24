@@ -55,4 +55,22 @@ export const CUSTOM_STYLE_MAP = {
     backgroundColor: "#F7F6F3",
     color: "#A41E68",
   },
+  FONT_ARIAL: {
+    fontFamily: "Arial, sans-serif",
+  },
+  FONT_TIMES: {
+    fontFamily: '"Times New Roman", serif',
+  },
+  FONT_GEORGIA: {
+    fontFamily: "Georgia, serif",
+  },
+  FONT_IMPACT: {
+    fontFamily: "Impact, sans-serif",
+  },
+  FONT_TAHOMA: {
+    fontFamily: "Tahoma, sans-serif",
+  },
+  FONT_VERDANA: {
+    fontFamily: "Verdana, sans-serif",
+  },
 };

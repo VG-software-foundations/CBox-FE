@@ -85,7 +85,7 @@ const TextEditor = ({ className }) => {
           handleClick={editorApi.handleClick}
           customStyleMap={CUSTOM_STYLE_MAP}
           blockRenderMap={BLOCK_RENDER_MAP}
-          editorState={editorState}
+          editorState={editorApi.state}
           onChange={editorApi.onChange}
           keyBindingFn={editorApi.handlerKeyBinding}
           handlePastedText={handlePastedText}

@@ -277,7 +277,12 @@ const addEntity = useCallback((entityType, data, mutability) => {
   
 
 
-  
+  const toggleFontStyle = (fontStyle) => {
+    setState((currentState) => 
+        RichUtils.toggleInlineStyle(currentState, fontStyle)
+    );
+};
+
 
 
 
@@ -288,6 +293,7 @@ const addEntity = useCallback((entityType, data, mutability) => {
       state,
       onChange,
       addEntity,
+      toggleFontStyle,
       toggleBlockType,
       currentBlockType,
       toggleInlineStyle,
@@ -303,7 +309,7 @@ const addEntity = useCallback((entityType, data, mutability) => {
     }),
     [
       state,
-      addLink,
+      addLink,toggleFontStyle,
       onChange,
       toggleBlockType,
       currentBlockType,

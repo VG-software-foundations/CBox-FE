@@ -77,9 +77,9 @@ function MainReg() {
                     console.error("Ошибкап", error);
                     setError("Не удалось");
                 } else {
-                    console.log("cool:", data);
-                    localStorage.setItem('jwtToken', data.token);
-                    apiclient.setJWTToken(data.token);
+                     console.log("cool:", data);
+                    // localStorage.setItem('jwtToken', data.token);
+                    // apiclient.setJWTToken(data.token);
                     setModalActive(true);
                 }
             });
@@ -94,7 +94,7 @@ function MainReg() {
         try {
             const response = await axios.post('/api/verify', { pin });
             if (response.data.success) {
-                navigate('/profil');
+                navigate('/');
             } else {
                 setError("Неверный PIN-код");
             }
