@@ -63,31 +63,35 @@ function Main() {
     const apiclient = new ApiClient();
     const userControllerApi = new UserControllerApi(apiclient);
 
+    // const handleFormLogin = async (e) => {
+    //     e.preventDefault();
+
+    //     const body = {
+    //         password: password,
+    //         username: email,
+    //     };
+
+    //     try {
+    //         userControllerApi.signIn(body, (error, data, response) => {
+    //             if (error) {
+    //                 console.error("Ошибка аутентификации:", error);
+    //                 setError('Ошибка аутентификации. Проверьте email и пароль.');
+    //             } else {
+    //                 console.log("Успешный вход:", data);
+    //                 localStorage.setItem('jwtToken', data.token);
+    //                 apiclient.setJWTToken(data.token);
+    //                 navigate('/profil');
+    //             }
+    //         });
+    //     } catch (err) {
+    //         console.error("Ошибка:", err);
+    //         setError("Не удалось войти. Попробуйте снова.");
+    //     }
+    // };
     const handleFormLogin = async (e) => {
         e.preventDefault();
-
-        const body = {
-            password: password,
-            username: email,
-        };
-
-        try {
-            userControllerApi.signIn(body, (error, data, response) => {
-                if (error) {
-                    console.error("Ошибка аутентификации:", error);
-                    setError('Ошибка аутентификации. Проверьте email и пароль.');
-                } else {
-                    console.log("Успешный вход:", data);
-                    localStorage.setItem('jwtToken', data.token);
-                    apiclient.setJWTToken(data.token);
-                    navigate('/profil');
-                }
-            });
-        } catch (err) {
-            console.error("Ошибка:", err);
-            setError("Не удалось войти. Попробуйте снова.");
-        }
-    };
+        alert('Форма отправлена без реального сервера!');
+      };
 
 
     return (
