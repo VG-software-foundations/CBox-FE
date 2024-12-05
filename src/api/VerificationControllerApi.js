@@ -48,7 +48,7 @@ export default class VerificationControllerApi {
      * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
      */
     verify(body, callback) {
-      
+      console.log();
       let postBody = body;
       // verify the required parameter 'body' is set
       if (body === undefined || body === null) {
@@ -68,7 +68,7 @@ export default class VerificationControllerApi {
         
       };
 
-      let authNames = [];
+      let authNames = ['jwtAuth'];
       let contentTypes = ['application/json'];
       let accepts = ['*/*'];
       let returnType = Object;

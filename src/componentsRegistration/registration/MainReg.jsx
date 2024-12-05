@@ -12,6 +12,7 @@ import ModalReg from "../modalReg/ModalReg";
 import UserControllerApi from "../../api/UserControllerApi"
 import ApiClient from '../../ApiClient';
 import VerificationControllerApi from '../../api/VerificationControllerApi';
+import LogControllerApi from '../../api/LogControllerApi';
 
 const langArr = {
     "login-title-enter active": {
@@ -86,22 +87,27 @@ function MainReg() {
                 }
             });
         } catch (err) {
-            logControllerApi.verify1("ERROR REGISTRATION: "+ error);
+            logControllerApi.verify1("ERROR REGISTRATION: "+ err);
             setError("Не удалось зарегистрироваться. Попробуйте снова.");
         }
     };
     
-    
+    const pincode={
+    code: pin,
+    }
     const handlePinSubmit = async () => {
+        
         try {
-            verificationControllerApi.verify(pin,(error, response)=>{
-            if (response.data.success) {
+            verificationControllerApi.verify(pincode,(data)=>{
+            if (true) {
                 navigate('/');
             } else {
                 setError("Неверный PIN-код");
+                console.log(data);
             }
         });
         } catch (err) {
+            console.log(err);
             logControllerApi.verify1("ERROR PIN: "+ err);
             setError("Не удалось подтвердить PIN-код");
         }

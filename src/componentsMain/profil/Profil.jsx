@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { LanguageContext } from './../../lang';
 import './Profil.css';
@@ -13,7 +14,6 @@ import chat from './../img/Robot.png';
 import Information from "../information/Information";
 import RenameModal from "../renameModal/RenameModal";
 import ChatModal from "../chatModal/chatModal";
-import FileControllerApi from './../../api/FileControllerApi';
 
 const langArrMain = {
     profile: {
@@ -42,6 +42,14 @@ const langArrMain = {
     },
 };
 
+const axiosInstance = axios.create({
+    baseURL: 'http://10.160.8.202:8080',
+    headers: {
+        Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
+    },
+    
+});
+
 function Profil() {
     const [modalActive, setModalActive] = useState(false);
     const [renameModalActive, setRenameModalActive] = useState(false);
@@ -50,18 +58,11 @@ function Profil() {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedFile, setSelectedFile] = useState(null);
     const [fileCounter, setFileCounter] = useState(1);
+    const [fileContent, setFileContent] = useState('');
     const { language } = useContext(LanguageContext);
     const [sidebarVisible, setSidebarVisible] = useState(false);
-    const [fileContent, setFileContent] = useState(null);
-    const [fileContentModalActive, setFileContentModalActive] = useState(false);
 
-    const sidebarRef = useRef(null); 
-    const fileApi = new FileControllerApi();
-
-    const toggleSidebar = () => {
-        setSidebarVisible(prevState => !prevState); 
-    };
-
+    const sidebarRef = useRef(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -89,8 +90,9 @@ function Profil() {
 
     const loadDocuments = async () => {
         try {
-            const response = await fileApi.get({});
+            const response = await axiosInstance.get('/files/get'); 
             setDocuments(response.data.content || []);
+
         } catch (error) {
             console.error('Ошибка загрузки документов:', error);
         }
@@ -100,14 +102,13 @@ function Profil() {
         const files = Array.from(event.target.files);
         try {
             const uploadPromises = files.map(file => {
-                const fileDto = {
-                    name: file.name,
-                    content: file,
-                };
-                return fileApi.upload({ body: fileDto });
+                const formData = new FormData();
+                formData.append("file", file);
+                formData.append("accessType", "PUBLIC");
+                return axiosInstance.post('/files/upload', formData);
             });
             await Promise.all(uploadPromises);
-            loadDocuments(); 
+            loadDocuments();
         } catch (error) {
             console.error('Ошибка загрузки файлов:', error);
         }
@@ -119,7 +120,7 @@ function Profil() {
             type: 'text/plain',
         };
         try {
-            await fileApi.upload({ body: newFile });
+            await axiosInstance.post('/files', newFile);
             setFileCounter(prevCounter => prevCounter + 1);
             loadDocuments();
             navigate('/editor');
@@ -128,16 +129,13 @@ function Profil() {
         }
     };
 
-    const handleFileRightClick = (e, file) => {
-        e.preventDefault();
-        setSelectedFile(file);
-        setModalActive(true);
-    };
-
     const handleOpenFile = async (file) => {
         try {
-            const response = await fileApi.findById1(file.id);
-            navigate(`/editor?fileContent=${encodeURIComponent(response.data.content)}`);
+            const response = await axiosInstance.get("/files/" + file.id);
+            const encodedContent = response.data.file; 
+        const decodedContent = atob(encodedContent);
+        setFileContent(decodedContent); 
+            navigate(`/editor?fileContent=${file.id}`);
         } catch (error) {
             console.error("Ошибка открытия файла:", error);
         }
@@ -149,7 +147,7 @@ function Profil() {
             type: file.type,
         };
         try {
-            await fileApi.upload({ body: copyFile });
+            await axiosInstance.post('/files', copyFile);
             setModalActive(false);
             loadDocuments();
         } catch (error) {
@@ -160,7 +158,7 @@ function Profil() {
     const handleRenameFile = async (file, newName) => {
         const updatedFile = { ...file, name: newName };
         try {
-            await fileApi.update1(updatedFile);
+            await axiosInstance.put(`/files/update1`, updatedFile);
             setRenameModalActive(false);
             loadDocuments();
         } catch (error) {
@@ -170,7 +168,7 @@ function Profil() {
 
     const handleDeleteFile = async (file) => {
         try {
-            await fileApi.delete1(file.id);
+            await axiosInstance.delete(`/files/delete1`);
             setModalActive(false);
             loadDocuments();
         } catch (error) {
@@ -178,8 +176,12 @@ function Profil() {
         }
     };
 
+    const toggleSidebar = () => {
+        setSidebarVisible(prevState => !prevState);
+    };
+
     const filteredDocuments = (documents || []).filter((file) =>
-        file?.name?.toLowerCase().includes(searchTerm.toLowerCase())
+        file?.link?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     return (
@@ -234,10 +236,14 @@ function Profil() {
                         <div
                             key={index}
                             className="card"
-                            onContextMenu={(e) => handleFileRightClick(e, file)}
+                            onContextMenu={(e) => {
+                                e.preventDefault();
+                                setSelectedFile(file);
+                                setModalActive(true);
+                            }}
                         >
                             <img src={dock} alt="Иконка" style={{ width: '204px', height: '204px' }} />
-                            <h3>{file.name}</h3>
+                            <h3>{file.link}</h3>
                         </div>
                     ))}
                 </div>
@@ -273,7 +279,6 @@ function Profil() {
                 active={modalActive2}
                 setActive={setModalActive2}
             />
-
         </div>
     );
 }

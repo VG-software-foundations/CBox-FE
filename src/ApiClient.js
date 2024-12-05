@@ -33,7 +33,7 @@ export default class ApiClient {
          * @type {String}
          * @default http://localhost:8080
          */
-        this.basePath = 'http://10.160.77.67:8080'.replace(/\/+$/, '');
+        this.basePath = 'http://10.160.8.202:8080'.replace(/\/+$/, '');
         this.jwtToken = null;
         /**
          * The authentication methods to be included for all API calls.

@@ -1,9 +1,10 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Modifier, Editor, EditorState } from "draft-js";
-import { useLocation } from "react-router-dom"; // Для работы с URL
+import { useLocation } from "react-router-dom";
 import "./TextEditor.css";
 import { BLOCK_RENDER_MAP, CUSTOM_STYLE_MAP } from "./config";
 import { useEditorApi } from "./context";
+import { useFileContext } from './file';
 import classNames from "classnames";
 
 const TextEditor = ({ className }) => {
@@ -11,27 +12,36 @@ const TextEditor = ({ className }) => {
   const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
   const editorRef = useRef(null);
 
-  const location = useLocation(); // Получаем информацию о текущем URL
-  const [fileContent, setFileContent] = useState(''); // Состояние для содержимого файла
+  const location = useLocation(); 
+  const { fileContent1 } = useFileContext();
+  const [fileContent, setFileContent] = useState('');
 
-  const [isTextLoaded, setIsTextLoaded] = useState(false); // Флаг, чтобы убедиться, что текст загружен только один раз
+  const [isTextLoaded, setIsTextLoaded] = useState(false);
 
+  // useEffect(() => {
+  //   const queryParams = new URLSearchParams(location.search);
+  //   const content = queryParams.get('fileContent');
+  //   if (content && !isTextLoaded) {
+  //     const decodedContent = atob(content);
+  //     const contentState = Modifier.insertText(
+  //       editorState.getCurrentContent(),
+  //       editorState.getSelection(),
+  //       decodedContent
+  //     );
+  //     setEditorState(EditorState.push(editorState, contentState, 'insert-characters'));
+  //     setIsTextLoaded(true);
+  //   }
+  // }, [location, editorState, isTextLoaded]);
   useEffect(() => {
-    // Извлекаем fileContent из параметров URL
-    const queryParams = new URLSearchParams(location.search);
-    const content = queryParams.get('fileContent');
-    if (content && !isTextLoaded) {
-      // Если есть переданный текст и он еще не был загружен в редактор
-      const contentState = Modifier.insertText(
-        editorState.getCurrentContent(),
-        editorState.getSelection(),
-        content
-      );
-      setEditorState(EditorState.push(editorState, contentState, 'insert-characters'));
-      setIsTextLoaded(true); // Устанавливаем флаг, что текст загружен
+    if (fileContent1) {
+        const contentState = Modifier.insertText(
+            editorState.getCurrentContent(),
+            editorState.getSelection(),
+            fileContent1
+        );
+        setEditorState(EditorState.push(editorState, contentState, 'insert-characters'));
     }
-  }, [location, editorState, isTextLoaded]);
-
+}, [fileContent1, editorState]);
   const handleFocus = () => {
     if (editorRef.current) {
       editorRef.current.focus();

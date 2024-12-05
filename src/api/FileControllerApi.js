@@ -70,7 +70,7 @@ export default class FileControllerApi {
         
       };
 
-      let authNames = [];
+      let authNames = ['jwtAuth'];
       let contentTypes = [];
       let accepts = [];
       let returnType = null;
@@ -113,7 +113,7 @@ export default class FileControllerApi {
         
       };
 
-      let authNames = [];
+      let authNames = ['jwtAuth'];
       let contentTypes = [];
       let accepts = ['*/*'];
       let returnType = PageResponseFileReadDto;
@@ -158,7 +158,7 @@ export default class FileControllerApi {
         
       };
 
-      let authNames = [];
+      let authNames = ['jwtAuth'];
       let contentTypes = [];
       let accepts = ['*/*'];
       let returnType = FileGetDto;
@@ -201,7 +201,7 @@ export default class FileControllerApi {
         
       };
 
-      let authNames = [];
+      let authNames = ['jwtAuth'];
       let contentTypes = [];
       let accepts = ['*/*'];
       let returnType = PageResponseFileReadDto;
@@ -246,7 +246,7 @@ export default class FileControllerApi {
         
       };
 
-      let authNames = [];
+      let authNames = ['jwtAuth'];
       let contentTypes = [];
       let accepts = ['*/*'];
       let returnType = FileReadDto;
@@ -273,8 +273,16 @@ export default class FileControllerApi {
      */
     upload(opts, callback) {
       opts = opts || {};
-      let postBody = opts['body'];
-
+      let postBody = null;
+      let formParams = new FormData();
+      
+      if (opts['body'] instanceof FormData) {
+          postBody = opts['body'];
+      } else if (opts['body']) {
+          formParams.append('file', opts['body']); 
+          postBody = formParams;
+      }
+      
       let pathParams = {
         
       };
@@ -282,13 +290,10 @@ export default class FileControllerApi {
         
       };
       let headerParams = {
-        
-      };
-      let formParams = {
-        
+        "Content-Type": "multipart/form-data",
       };
 
-      let authNames = [];
+      let authNames = ['jwtAuth'];
       let contentTypes = ['application/json'];
       let accepts = ['*/*'];
       let returnType = FileReadDto;

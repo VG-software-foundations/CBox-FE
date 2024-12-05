@@ -11,6 +11,8 @@ import { useAuth0 } from "@auth0/auth0-react";
 import UserControllerApi from "../../api/UserControllerApi"
 import ApiClient from '../../ApiClient';
 
+import LogControllerApi from '../../api/LogControllerApi';
+
 const langArr = {
     "login-title-enterM activeM": {
         "ru": "Вход",
@@ -62,6 +64,7 @@ function Main() {
 
     const apiclient = new ApiClient();
     const userControllerApi = new UserControllerApi(apiclient);
+    const logControllerApi = new LogControllerApi(apiclient);
 
     const handleFormLogin = async (e) => {
         e.preventDefault();
@@ -74,7 +77,7 @@ function Main() {
         try {
             userControllerApi.signIn(body, (error, data, response) => {
                 if (error) {
-                    logControllerApi.verify1("ERROR Authentification: "+ err);
+                    logControllerApi.verify1("ERROR Authentification: "+ error);
                     setError('Ошибка аутентификации. Проверьте email и пароль.');
                 } else {
                     logControllerApi.verify1("SUCCESS ENTER: "+ data);

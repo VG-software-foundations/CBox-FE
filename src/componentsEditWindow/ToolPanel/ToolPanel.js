@@ -71,7 +71,11 @@ const ToolPanel = () => {
         setSelectedColor(color);
         setTextColor(color); // Применяем цвет к тексту
     };
-
+    const handleFontFamilySelect = (font) => {
+        const fontKey = `FONT_${font.charAt(0).toUpperCase() + font.slice(1)}`;
+        toggleFontStyle(fontKey);
+        setFontFamilyOpen(false); 
+      };
     const handleAlignmentChange = (alignmentType) => {
         toggleBlockType(alignmentType);
       };
@@ -212,7 +216,11 @@ const ToolPanel = () => {
                     </button>
                     <div className="dropdown-content" style={{ display: fontFamilyOpen ? 'block' : 'none' }}>
                         {toolbarOptions.fontFamily.options.map((font, index) => (
-                    <button key={index} onClick={(e) => { e.preventDefault(); }}>
+                    <button key={index} 
+                    onClick={(e) => { 
+                        e.preventDefault(); 
+                        handleFontFamilySelect(font); 
+                      }}>
                         {font}
                     </button>
                      ))}
