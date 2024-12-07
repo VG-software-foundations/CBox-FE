@@ -72,6 +72,7 @@ function Main() {
         const body = {
             password: password,
             username: email,
+            locale: localStorage.getItem('selectedLanguage'),
         };
 
         try {
