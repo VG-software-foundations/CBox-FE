@@ -14,6 +14,9 @@ import chat from './../img/Robot.png';
 import Information from "../information/Information";
 import RenameModal from "../renameModal/RenameModal";
 import ChatModal from "../chatModal/chatModal";
+import PizZip from "pizzip";
+import Docxtemplater from "docxtemplater";
+
 
 const langArrMain = {
     profile: {
@@ -43,7 +46,7 @@ const langArrMain = {
 };
 
 const axiosInstance = axios.create({
-    baseURL: 'http://10.160.8.202:8080',
+    baseURL: 'http://10.160.30.73:8080',
     headers: {
         Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
     },
@@ -131,21 +134,69 @@ function Profil() {
 
     const handleOpenFile = async (file) => {
         try {
-            const response = await axiosInstance.get("/files/" + file.id);
-            const encodedContent = response.data.file; 
-        const decodedContent = atob(encodedContent);
-        setFileContent(decodedContent); 
-            navigate(`/editor?fileContent=${file.id}`);
+            const response = await axiosInstance.get(`/files/${file.id}`);
+            const jsonData = response.data;
+            const byteString = jsonData.file;
+            const fileType = jsonData.type; 
+            const byteCharacters = atob(byteString);
+            const byteNumbers = new Uint8Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+    
+            if (fileType === '.txt') {
+                const text = new TextDecoder().decode(byteNumbers);
+                navigate("/editor", { state: { fileContent: text, file } });
+            } else if (fileType === '.docx') {
+                const blob = new Blob([byteNumbers], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+                const arrayBuffer = await blob.arrayBuffer();
+                const text = await extractTextFromDocx(arrayBuffer); 
+                navigate("/editor", { state: { fileContent: text, file } });
+            } else {
+                console.error('Неподдерживаемый тип файла:', fileType);
+            }
         } catch (error) {
             console.error("Ошибка открытия файла:", error);
         }
     };
+    
+    const extractTextFromDocx = (arrayBuffer) => {
+        return new Promise((resolve, reject) => {
+            const JSZip = require("jszip");
+            const zip = new JSZip();
+            zip.loadAsync(arrayBuffer)
+                .then((contents) => {
+                    return contents.file("word/document.xml").async("string");
+                })
+                .then((xml) => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(xml, "application/xml");
+                    const text = Array.from(doc.getElementsByTagName("w:t"))
+                        .map(node => node.textContent)
+                        .join(" ");
+                    resolve(text);
+                })
+                .catch(reject);
+        });
+    };
+//     const handleOpenFile = async (file) => {
+//     try {
+//         const response = await axiosInstance.get("/files/" + file.id);
+//         const encodedContent = response.data.file;
+//         const decodedContent = atob(encodedContent);
+//         setFileContent(decodedContent);
+//         setSelectedFile(file);
+//         navigate(`/editor?fileContent=${encodeURIComponent(decodedContent)}`);
+//     } catch (error) {
+//         console.error("Ошибка открытия файла:", error);
+//     }
+// };
 
 
     
     const handleDeleteFile = async (file) => {
     try {
-        await axiosInstance.delete(`/files/delete1/${file.id}`);
+        await axiosInstance.delete(`/files?id=${file.id}`);
         setDocuments((prevDocs) => prevDocs.filter((doc) => doc !== file));
         setModalActive(false);
         loadDocuments();
@@ -160,7 +211,7 @@ function Profil() {
     const copyFile = {
         name: `${file.name} - Copy`,
         type: file.type,
-        originalId: file.id, // Добавьте идентификатор оригинального файла
+        originalId: file.id,
     };
     try {
         await axiosInstance.post('/files/copy', copyFile);
@@ -175,7 +226,7 @@ function Profil() {
     const handleRenameFile = async (file, newName) => {
         const updatedFile = { ...file, name: newName };
         try {
-            await axiosInstance.put(`/files/update1`, updatedFile);
+            await axiosInstance.put(`/files/rename`, updatedFile);
             setRenameModalActive(false);
             loadDocuments();
         } catch (error) {
@@ -184,24 +235,48 @@ function Profil() {
     };
 
 
-
     const handleDownloadFile = async (file) => {
-    try {
-        const response = await axiosInstance.get(`/files/${file.id}`, {
-            responseType: 'blob',
-        });
-        const url = URL.createObjectURL(new Blob([response.data]));
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = file.name;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-    } catch (error) {
-        console.error('Ошибка скачивания файла:', error);
-    }
-};
+        try {
+            const response = await axiosInstance.get(`/files/${file.id}`);
+            const jsonData = response.data;
+            const byteString = jsonData.file;
+            const fileType = jsonData.type;
+            
+            const byteCharacters = atob(byteString);
+            const byteNumbers = new Uint8Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            console.log(fileType);
+            if(fileType == '.txt'){
+              const blob = new Blob([byteNumbers], { type: 'text/plain' });
+              const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = jsonData.name; 
+            
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+        } else{
+             const blob = new Blob([byteNumbers], { type: 'application/octet-stream' });
+             const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = jsonData.name; 
+            
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        } catch (error) {
+            console.error('Ошибка скачивания файла:', error);
+        }
+    };
 
 
 
