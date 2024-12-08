@@ -26,3 +26,11 @@ https://github.com/VG-software-foundations/CBox-BE
 Instructions for organizing network interaction:
 
 We use a local network if we can meet in person and use hamachi otherwise. To send requests and connect the backend and frontend, we use the axios library, swagger and use ready-made functions and methods.
+
+
+Steps to start a Docker container:
+
+docker build -t my-react-app.
+
+docker run -d -p 80:80 my-react-app
+
